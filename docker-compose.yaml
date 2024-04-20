@@ -1,0 +1,38 @@
+services:
+  app:
+    container_name: app
+    image: app
+    build: 
+      dockerfile: MeasurementSystem.Server/Dockerfile
+    ports:
+      - '3500:8080'
+    depends_on:
+      - influxdb
+      - postgresdb
+  influxdb:
+    container_name: influxdb
+    image: influxdb:latest
+    ports:
+      - '8086:8086'
+    volumes:
+      - ./InfluxDB/db:/var/lib/influxdb2
+      - ./InfluxDB/configs:/etc/influxdb2
+      - ./InfluxDB/backup:/backup
+    environment:
+      - DOCKER_INFLUXDB_DB=influxdb
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=my-user
+      - DOCKER_INFLUXDB_INIT_PASSWORD=my-password
+      - DOCKER_INFLUXDB_INIT_ORG=org
+      - DOCKER_INFLUXDB_INIT_BUCKET=init-bucket
+  postgresdb:
+    container_name: postgresdb
+    image: postgres:latest
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./PostgresDB/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgresdb
+      - POSTGRES_USER=my-user
+      - POSTGRES_PASSWORD=my-password

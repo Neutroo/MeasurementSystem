@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeasurementSystem.Server", "MeasurementSystem.Server\MeasurementSystem.Server.csproj", "{DE599866-C3CD-431D-A12E-E4BF4B7A7D77}"
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "measurementsystem.client", "measurementsystem.client\measurementsystem.client.esproj", "{C34CBE81-0E61-4734-98AE-16138DE4C63C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DE599866-C3CD-431D-A12E-E4BF4B7A7D77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE599866-C3CD-431D-A12E-E4BF4B7A7D77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE599866-C3CD-431D-A12E-E4BF4B7A7D77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE599866-C3CD-431D-A12E-E4BF4B7A7D77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C34CBE81-0E61-4734-98AE-16138DE4C63C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C34CBE81-0E61-4734-98AE-16138DE4C63C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C34CBE81-0E61-4734-98AE-16138DE4C63C}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{C34CBE81-0E61-4734-98AE-16138DE4C63C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C34CBE81-0E61-4734-98AE-16138DE4C63C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C34CBE81-0E61-4734-98AE-16138DE4C63C}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7E288686-C227-4E23-A496-00F8B8CF6237}
+	EndGlobalSection
+EndGlobal
