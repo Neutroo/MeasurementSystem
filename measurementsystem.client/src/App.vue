@@ -1,60 +1,47 @@
 <script setup>
-    import Sidebar from './components/Sidebar.vue'
+import HelloWorld from './components/HelloWorld.vue'
+import TheWelcome from './components/TheWelcome.vue'
 </script>
 
 <template>
-    <div class="container">
-        <Sidebar />
-        <div class="content">
-            <main>
-                <router-view />
-            </main>
-        </div>
+  <header>
+    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
+
+    <div class="wrapper">
+      <HelloWorld msg="You did it!" />
     </div>
+  </header>
+
+  <main>
+    <TheWelcome />
+  </main>
 </template>
 
-<style>
-    header {
-        line-height: 1.5;
-    }
+<style scoped>
+header {
+  line-height: 1.5;
+}
 
-    body {
-        background: linear-gradient(90deg, #7de2d1, #339989);
-        padding: 0;
-        margin: 0;
-        font-family: Raleway, sans-serif;
-    }
+.logo {
+  display: block;
+  margin: 0 auto 2rem;
+}
 
-    .container {
-        display: flex;
-        height: 100vh;
-        max-height: 100vh;
-        width: 100%;
-    }
+@media (min-width: 1024px) {
+  header {
+    display: flex;
+    place-items: center;
+    padding-right: calc(var(--section-gap) / 2);
+  }
 
-    .content {
-        flex: 1;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 20px;
-    }
-    
-    @media (min-width: 1024px) {
-        header {
-            display: flex;
-            place-items: center;
-            padding-right: calc(var(--section-gap) / 2);
-        }
-    
-        .logo {
-          margin: 0 2rem 0 0;
-        }
-    
-        header .wrapper {
-          display: flex;
-          place-items: flex-start;
-          flex-wrap: wrap;
-        }
-    }
+  .logo {
+    margin: 0 2rem 0 0;
+  }
+
+  header .wrapper {
+    display: flex;
+    place-items: flex-start;
+    flex-wrap: wrap;
+  }
+}
 </style>

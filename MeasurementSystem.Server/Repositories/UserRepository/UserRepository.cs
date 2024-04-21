@@ -19,7 +19,7 @@ namespace MeasurementSystemWebAPI.Repositories.UserRepository
         public User Select(string username)
         {
             var user = dbContext.Users.FirstOrDefault(x => x.Username == username) 
-                ?? throw new NotFoundException($"Пользователь не найден");
+                ?? throw new NotFoundException($"Пользователь с именем {username} не найден");
             return user;
         }
 
