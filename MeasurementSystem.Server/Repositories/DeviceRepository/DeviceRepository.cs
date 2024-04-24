@@ -134,7 +134,7 @@ namespace MeasurementSystemWebAPI.Repositories.DeviceRepository
                     : point = point.Field(pair.Key, pair.Value);
             }
 
-            point = point.Timestamp(DateTime.UtcNow, WritePrecision.Ns);
+            point = point.Timestamp(DateTime.Now, WritePrecision.Ns);
 
             using (var writeApi = dbContext.InfluxDBClient.GetWriteApi())
             {
