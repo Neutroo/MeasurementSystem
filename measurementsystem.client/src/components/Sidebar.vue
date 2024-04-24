@@ -3,36 +3,43 @@
     import DataIcon from './icons/IconData.vue'
     import RegisteredDevicesIcon from './icons/IconRegisteredDevices.vue'
     import UsersIcon from './icons/IconUsers.vue'
+    import UserIcon from './icons/IconUser.vue'
 </script>
 
 <template>
     <div v-if="currentRoute != '/login'" class="sidebar">
         <nav>
-            <router-link class="router-field" to="/login">
+            <router-link v-if="!isLoggedIn" class="router-field" to="/login">
                 <LoginIcon />
                 <p class="router-text">Авторизоваться</p>
             </router-link>
             <router-link class="router-field" to="/device-data">
-                <DataIcon  />
+                <DataIcon class="data-icon" />
                 <p class="router-text">Данные по приборам</p>
             </router-link>
-            <router-link class="router-field" to="/">
+            <router-link class="router-field" to="/device-registration">
                 <RegisteredDevicesIcon />
                 <p class="router-text">Регистрация устройств</p>
             </router-link>
-            <router-link class="router-field" to="/">
+            <router-link class="router-field" to="/users">
                 <UsersIcon />
                 <p class="router-text">Пользователи</p>
             </router-link>
         </nav>
+        <div v-if="isLoggedIn" class="user-field">
+            <UserIcon class="user-icon" />
+            <span class="username">{{ getUsername }}</span>
+        </div>
     </div>
 </template>
 
 <script>
     import { defineComponent } from 'vue';
+    import { mapGetters } from "vuex";
 
     export default defineComponent({
         computed: {
+            ...mapGetters(["isLoggedIn", "getUsername"]),
             currentRoute() {
                 return this.$route.path;
             }
@@ -54,13 +61,34 @@
         box-shadow: 0px 0px 24px #246a73;
         padding: 20px;
         position: sticky;
-    }
-
-    nav {
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
+    }
+
+    nav {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .user-field {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .user-icon {
+        align-self: center;
+    }
+
+    .username {
+        font-size: 12px;
+        font-weight: bold;
+        overflow-wrap: break-word;
+        color: #339989;
+        text-align: center;
     }
 
     .router-field {
@@ -68,13 +96,12 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        padding: 20px 0px;
+        padding: 10px 0px;
         text-decoration: none;
         color: #339989;
     }
 
     .router-field:active,
-    .router-field:focus,
     .router-field:hover {
         transform: scale(1.02);
     }

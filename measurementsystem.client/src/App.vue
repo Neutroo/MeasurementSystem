@@ -3,7 +3,7 @@
 </script>
 
 <template>
-    <div class="container">
+    <div class="main-container">
         <Sidebar />
         <div class="content">
             <main>
@@ -13,19 +13,29 @@
     </div>
 </template>
 
+<script>
+    import { defineComponent } from 'vue';
+
+    export default defineComponent({
+        created() {
+            this.$router.push('/login')
+        }
+    });
+</script>
+
 <style>
     header {
         line-height: 1.5;
     }
 
-    body {
+    body {       
         background: linear-gradient(90deg, #7de2d1, #339989);
         padding: 0;
         margin: 0;
         font-family: Raleway, sans-serif;
     }
 
-    .container {
+    .main-container {
         display: flex;
         height: 100vh;
         max-height: 100vh;
@@ -38,23 +48,5 @@
         justify-content: center;
         align-items: center;
         padding: 20px;
-    }
-    
-    @media (min-width: 1024px) {
-        header {
-            display: flex;
-            place-items: center;
-            padding-right: calc(var(--section-gap) / 2);
-        }
-    
-        .logo {
-          margin: 0 2rem 0 0;
-        }
-    
-        header .wrapper {
-          display: flex;
-          place-items: flex-start;
-          flex-wrap: wrap;
-        }
     }
 </style>

@@ -37,7 +37,7 @@ namespace MeasurementSystemWebAPI.Controllers
 
             if (from > to)
             {
-                return BadRequest("Start time cannot be greater than end time");
+                return BadRequest("Время начала не может превышать время окончания");
             }
 
             try
@@ -68,7 +68,7 @@ namespace MeasurementSystemWebAPI.Controllers
 
             if (from > to)
             {
-                return BadRequest("Start time cannot be greater than end time");
+                return BadRequest("Время начала не может превышать время окончания");
             }
 
             try
@@ -93,7 +93,7 @@ namespace MeasurementSystemWebAPI.Controllers
         {
             if (json == null)
             {
-                return BadRequest("Empty json");
+                return BadRequest("Пустой json");
             }
 
             try
@@ -102,7 +102,7 @@ namespace MeasurementSystemWebAPI.Controllers
 
                 if (string.IsNullOrEmpty(device))
                 {
-                    return BadRequest("Empty json");
+                    return BadRequest("Пустой json");
                 }
 
                 deviceRepository.Insert(device);

@@ -1,6 +1,7 @@
 <script setup>
-    import UserIcon from './icons/IconUser.vue'
+    import UsernameIcon from './icons/IconUsername.vue'
     import LockIcon from './icons/IconLock.vue'
+    import Error from './Error.vue'
 </script>
 
 <template>
@@ -8,7 +9,7 @@
         <div class="screen">
             <form class="login" @submit.prevent="login">
                 <div class="login-field">
-                    <UserIcon class="login-icon" />
+                    <UsernameIcon class="login-icon" />
                     <input type="text" class="login-input" v-model="username" placeholder="Username" required>
                 </div>
                 <div class="login-field">
@@ -18,14 +19,16 @@
                 <button type="submit" class="login-submit">
                     <span class="button-text">Войти</span>
                 </button>
+                <Error :message="error" />
             </form>
             <a class="skip" @click="goToHome">Пропустить</a>
         </div>
     </div>
 </template>
 
-<script>
+<script>  
     import { defineComponent } from 'vue';
+    import { mapMutations } from "vuex";
 
     export default defineComponent({
         components: {
@@ -39,7 +42,8 @@
         data() {
             return {
                 username: '',
-                password: ''
+                password: '',
+                error: ''
             }
         },
         computed: {
@@ -65,14 +69,43 @@
         destroyed() {
         },
         methods: {
+            ...mapMutations(["setToken", "setUsername"]),
             goToHome() {
                 this.$router.push('/')
             },
-            login() {
-                console.log(this.username);
-                console.log(this.password);
+            async login() {
+                try {
+                    const response = await fetch('api/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            username: this.username,
+                            password: this.password
+                        })
+                    });
+
+                    if (response.ok) {
+                        const token = await response.text();
+                        this.setToken(token);
+                        this.setUsername(this.username);
+                        this.goToHome();
+                    }
+                    else {
+                        if (response.status === 500) {
+                            this.error = 'Status: 500. Internal Server Error.Status: 500. Internal Server Error.Status: 500. Internal Server Error.';
+                        }
+                        else {
+                            this.error = await response.text();
+                        }
+                    }
+                }
+                catch (error) {
+                    console.log(error);
+                }
             }
-        },
+        }
     });
 </script>
 
@@ -94,7 +127,7 @@
     .screen {
         background-color: #fffafb;
         position: relative;
-        height: 500px;
+        min-height: 500px;
         width: 360px;
         box-shadow: 0px 0px 24px #246a73;
         border-radius: 30px;
@@ -142,14 +175,14 @@
         font-size: 14px;
         margin-top: 30px;
         padding: 16px 20px;
-        border-radius: 30px;
+        border-radius: 15px;
         border: none;
         text-transform: uppercase;
         font-weight: 700;
         display: flex;
         flex-direction: column;
         align-items: center;
-        width: 75%;
+        width: 72%;
         color: #fff;
         cursor: pointer;
         transition: .2s;

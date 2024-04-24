@@ -117,7 +117,7 @@ namespace MeasurementSystemWebAPI.Repositories.DeviceRepository
 
             if (!keyValuePairs.ContainsKey("system_Akey"))
             {
-                throw new Exception("No authentication key");
+                throw new Exception("Нет ключа аутентификации");
             }
 
             var authKey = keyValuePairs["system_Akey"];

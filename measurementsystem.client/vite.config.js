@@ -19,7 +19,7 @@ export default defineConfig({
                 target,
                 secure: false
             },
-            '^/api/device': {
+            '^/api': {
                 target,
                 secure: false
             }

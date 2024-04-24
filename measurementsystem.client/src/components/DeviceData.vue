@@ -1,5 +1,5 @@
 <script setup>
-    import ErrorIcon from './icons/IconError.vue'
+    import Error from './Error.vue'
 </script>
 
 <template>
@@ -15,14 +15,9 @@
                     <input class="date-input" type="datetime-local" id="end-date" v-model="endDate">
                 </div>
                 <button class="download" @click="download">Скачать</button>
-                <div v-if="error" class="error-container">
-                    <div class="error-field">
-                        <ErrorIcon class="error-icon"></ErrorIcon>
-                        <p class="error-text">{{ error }}</p>
-                    </div>
-                </div>
+                <Error :message="error" />
             </div>
-            </div>
+        </div>
     </div>
 </template>
 
@@ -30,14 +25,6 @@
     import { defineComponent } from 'vue';
 
     export default defineComponent({
-        components: {
-        },
-        directives: {
-        },
-        filters: {
-        },
-        props: {
-        },
         data() {
             return {
                 startDate: '',
@@ -45,28 +32,6 @@
                 loading: false,
                 error: ''
             }
-        },
-        computed: {
-        },
-        watch: {
-        },
-        beforeCreate() {
-        },
-        created() {
-        },
-        beforeMount() {
-        },
-        mounted() {
-        },
-        updated() {
-        },
-        activated() {
-        },
-        deactivated() {
-        },
-        beforeDestroy() {
-        },
-        destroyed() {
         },
         methods: {
             async download() {
@@ -94,7 +59,12 @@
                         this.error = '';
                     }
                     else {
-                        this.error = await response.text();
+                        if (response.status === 500) {
+                            this.error = 'Status: 500. Internal Server Error.';
+                        }
+                        else {
+                            this.error = await response.text();
+                        }
                     }
                     this.loading = false;
                 }
@@ -102,7 +72,7 @@
                     console.log(error);
                 }
             }
-        },
+        }
     });
 </script>
 
@@ -116,7 +86,6 @@
 
     .screen {
         background-color: #fffafb;
-        position: relative;
         min-height: 450px;
         width: 550px;
         box-shadow: 0px 0px 24px #246a73;
@@ -139,14 +108,14 @@
 
     .date-label {
         color: #339989;
+        font-weight: bold;
     }
 
     .date-input {
         background: none;
         border: none;
         border-bottom: 2px solid #D1D1D4;
-        padding: 10px;
-        padding-left: 0px;
+        padding: 10px 0px;
         font-weight: 700;
         width: 100%;
         transition: .2s;
@@ -166,14 +135,14 @@
         font-size: 14px;
         margin-top: 30px;
         padding: 16px 20px;
-        border-radius: 30px;
+        border-radius: 15px;
         border: none;
         text-transform: uppercase;
         font-weight: 700;
         display: flex;
         flex-direction: column;
         align-items: center;
-        width: 60%;
+        width: 62%;
         color: #fff;
         cursor: pointer;
         transition: .2s;
@@ -183,28 +152,5 @@
     .download:hover {
         background-color: #29bca4;
         transform: scale(1.02);
-    }
-
-    .error-container {
-        width: 60%;
-        display: flex;
-        justify-content: center;
-    }
-
-    .error-field {
-        position: relative;
-    }
-
-    .error-icon {
-        position: absolute;
-        top: 24px;
-    }
-
-    .error-text {
-        padding: 10px;
-        padding-left: 24px;
-        font-weight: 700;
-        color: #c32f27;
-        overflow-wrap: break-word;
     }
 </style>
