@@ -23,8 +23,8 @@ namespace MeasurementSystemWebAPI.Repositories.DeviceRepository
 
         public async Task<Dictionary<string, Record>> SelectAsync(DateTime from, DateTime to)
         {
-            var query = $"from(bucket: \"{dbContext.Bucket}\") |> range(start: {from.Subtract(DateTime.UnixEpoch).TotalSeconds}, " +
-                $"stop: {to.Subtract(DateTime.UnixEpoch).TotalSeconds})";
+            var query = $"from(bucket: \"{dbContext.Bucket}\") |> range(start: {from.AddHours(-3).Subtract(DateTime.UnixEpoch).TotalSeconds}, " +
+                $"stop: {to.AddHours(-3).Subtract(DateTime.UnixEpoch).TotalSeconds})";
             var tables = await dbContext.InfluxDBClient.GetQueryApi().QueryAsync(query, dbContext.Org);
 
             var data = new Dictionary<string, Dictionary<DateTime, IDictionary<string, object>>>();
