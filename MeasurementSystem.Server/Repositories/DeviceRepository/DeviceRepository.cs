@@ -34,14 +34,14 @@ namespace MeasurementSystemWebAPI.Repositories.DeviceRepository
                 foreach (var record in table.Records)
                 {
                     var authKey = record.Values["_measurement"].ToString();
-                    var time = record.Values["_time"];
-                    var utcTime = DateTime.Parse(time.ToString());
+                    var utcTime = record.Values["_time"];
+                    var localTime = DateTime.Parse(utcTime.ToString());
                     var field = record.Values["_field"].ToString();
                     var value = record.Values["_value"];
 
-                    data.TryAdd(authKey, new Dictionary<DateTime, IDictionary<string, object>>());
-                    data[authKey].TryAdd(utcTime, new ExpandoObject());
-                    data[authKey][utcTime].Add(field, value);
+                    data.TryAdd(authKey, []);
+                    data[authKey].TryAdd(localTime, new ExpandoObject());
+                    data[authKey][localTime].Add(field, value);
                 }
             }
 
@@ -134,7 +134,7 @@ namespace MeasurementSystemWebAPI.Repositories.DeviceRepository
                     : point = point.Field(pair.Key, pair.Value);
             }
 
-            point = point.Timestamp(DateTime.Now, WritePrecision.Ns);
+            point = point.Timestamp(DateTime.UtcNow, WritePrecision.Ns);
 
             using (var writeApi = dbContext.InfluxDBClient.GetWriteApi())
             {
