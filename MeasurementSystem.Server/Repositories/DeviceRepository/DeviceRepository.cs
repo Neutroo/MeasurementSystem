@@ -35,7 +35,7 @@ namespace MeasurementSystemWebAPI.Repositories.DeviceRepository
                 {
                     var authKey = record.Values["_measurement"].ToString();
                     var utcTime = record.Values["_time"];
-                    var localTime = DateTime.Parse(utcTime.ToString());
+                    var localTime = DateTime.Parse(utcTime.ToString()).AddHours(3);
                     var field = record.Values["_field"].ToString();
                     var value = record.Values["_value"];
 
