@@ -186,7 +186,7 @@
             },
             async deleteUser(id) {
                 if (this.getUsername === this.usernameForDelete) {
-                    this.error = 'Вы не можете удалить пользоваться через которого сейчас авторизованы';
+                    this.error = 'Вы не можете удалить пользователя через которого сейчас авторизованы';
                     this.isPopupVisible = false;
                     return;
                 }
