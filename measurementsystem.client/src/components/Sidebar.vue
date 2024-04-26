@@ -21,7 +21,7 @@
                 <RegisteredDevicesIcon />
                 <p class="router-text">Регистрация устройств</p>
             </router-link>
-            <router-link class="router-field" to="/users">
+            <router-link v-if="isLoggedIn" class="router-field" to="/users">
                 <UsersIcon />
                 <p class="router-text">Пользователи</p>
             </router-link>

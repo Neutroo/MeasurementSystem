@@ -10,11 +10,11 @@
             <form class="login" @submit.prevent="login">
                 <div class="login-field">
                     <UsernameIcon class="login-icon" />
-                    <input type="text" class="login-input" v-model="username" placeholder="Username" required>
+                    <input type="text" class="login-input" v-model="username" placeholder="Имя пользователя" required>
                 </div>
                 <div class="login-field">
                     <LockIcon class="login-icon" />
-                    <input type="password" class="login-input" v-model="password" placeholder="Password" required>
+                    <input type="password" class="login-input" v-model="password" placeholder="Пароль" required>
                 </div>
                 <button type="submit" class="login-submit">
                     <span class="button-text">Войти</span>
@@ -94,7 +94,7 @@
                     }
                     else {
                         if (response.status === 500) {
-                            this.error = 'Status: 500. Internal Server Error.Status: 500. Internal Server Error.Status: 500. Internal Server Error.';
+                            this.error = 'Status: 500. Internal Server Error.';
                         }
                         else {
                             this.error = await response.text();
@@ -189,7 +189,6 @@
     }
 
     .login-submit:active,
-    .login-submit:focus,
     .login-submit:hover {
         background-color: #29bca4;
         transform: scale(1.02);
