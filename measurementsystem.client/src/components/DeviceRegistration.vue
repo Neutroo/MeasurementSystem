@@ -233,17 +233,6 @@
                     return;
                 }
 
-                this.deviceInfos.push({
-                    "id": 1,
-                    "name": "РОСА К-2",
-                    "serial": "01",
-                    "authKey": "Kn00Mddnd",
-                    "x": 0,
-                    "y": 0,
-                    "location": "Кафедра К-3",
-                    "isDeleted": false
-                });
-
                 try {
                     const response = await fetch('api/deviceinfo', {
                         method: 'POST',
@@ -291,17 +280,6 @@
                 if (!this.isValid(this.PUTdeviceinfo)) {
                     return;
                 }
-
-                this.deviceInfos.push({
-                    "id": 1,
-                    "name": "РОСА К-2",
-                    "serial": "01",
-                    "authKey": "Kn00Mddnd",
-                    "x": 0,
-                    "y": 0,
-                    "location": "Кафедра К-3",
-                    "isDeleted": false
-                });
 
                 try {
                     const response = await fetch(`api/deviceinfo/${id}`, {
