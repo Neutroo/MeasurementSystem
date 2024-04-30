@@ -31,42 +31,12 @@
     import { mapMutations } from "vuex";
 
     export default defineComponent({
-        components: {
-        },
-        directives: {
-        },
-        filters: {
-        },
-        props: {
-        },
         data() {
             return {
                 username: '',
                 password: '',
                 error: ''
             }
-        },
-        computed: {
-        },
-        watch: {
-        },
-        beforeCreate() {
-        },
-        created() {
-        },
-        beforeMount() {
-        },
-        mounted() {
-        },
-        updated() {
-        },
-        activated() {
-        },
-        deactivated() {
-        },
-        beforeDestroy() {
-        },
-        destroyed() {
         },
         methods: {
             ...mapMutations(["setToken", "setUsername"]),
@@ -75,6 +45,7 @@
             },
             async login() {
                 try {
+                    this.error = '';
                     const response = await fetch('api/login', {
                         method: 'POST',
                         headers: {

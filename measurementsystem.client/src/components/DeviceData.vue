@@ -14,7 +14,12 @@
                     <label class="date-label" for="end-date">Конец:</label>
                     <input class="date-input" type="datetime-local" id="end-date" v-model="endDate">
                 </div>
-                <button class="download" @click="download">Скачать</button>
+                <div v-if="loading" class="loading-overlay">
+                    <div class="loading-spinner"></div>
+                </div>
+                <div v-else class="download-container">
+                    <button class="download" @click="download">Скачать</button>
+                </div>
                 <Error :message="error" />
             </div>
         </div>
@@ -132,10 +137,14 @@
         cursor: text;
     }
 
+    .download-container {
+        margin-top: 30px;
+        width: 62%;
+    }
+
     .download {
         background: #339989;
         font-size: 14px;
-        margin-top: 30px;
         padding: 16px 20px;
         border-radius: 15px;
         border: none;
@@ -144,7 +153,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        width: 62%;
+        width: 100%;
         color: #fff;
         cursor: pointer;
         transition: .2s;
@@ -154,5 +163,29 @@
     .download:hover {
         background-color: #29bca4;
         transform: scale(1.02);
+    }
+
+    .loading-overlay {
+        width: 100%;
+        height: 100%;
+        margin-top: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .loading-spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid #29bca4;
+        border-top: 4px solid #2d8678;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
     }
 </style>
