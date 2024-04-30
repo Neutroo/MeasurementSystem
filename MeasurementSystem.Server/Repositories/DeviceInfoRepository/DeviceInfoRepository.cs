@@ -1,6 +1,8 @@
-﻿using InfluxDB.Client.Core.Exceptions;
+﻿using InfluxDB.Client.Api.Domain;
+using InfluxDB.Client.Core.Exceptions;
 using MeasurementSystemWebAPI.Contexts;
 using MeasurementSystemWebAPI.Models;
+using System.Data;
 
 namespace MeasurementSystemWebAPI.Repositories.DeviceInfoRepository
 {
@@ -21,7 +23,15 @@ namespace MeasurementSystemWebAPI.Repositories.DeviceInfoRepository
             return deviceInfo;
         }
 
-        public void Insert(DeviceInfo deviceInfo) => dbContext.DeviceInfos.Add(deviceInfo);
+        public void Insert(DeviceInfo deviceInfo)
+        {
+            if (dbContext.DeviceInfos.Any(i => i.AuthKey == deviceInfo.AuthKey.Trim()))
+            {
+                throw new DuplicateNameException($"Прибор с таким ключом уже существует");
+            }
+
+            dbContext.DeviceInfos.Add(deviceInfo);
+        }
 
         public void Update(int id, Dictionary<string, object> items)
         {
@@ -56,7 +66,7 @@ namespace MeasurementSystemWebAPI.Repositories.DeviceInfoRepository
                             throw new InvalidCastException($"Нельзя привести значение {item.Value} к типу double");
                         }
                         break;
-                        case "y":
+                    case "y":
                         if (double.TryParse(item.Value?.ToString(), out var y))
                         {
                             info.Y = y;

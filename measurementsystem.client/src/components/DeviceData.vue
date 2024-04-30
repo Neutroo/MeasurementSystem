@@ -35,6 +35,8 @@
         },
         methods: {
             async download() {
+                this.error = '';
+
                 if (this.startDate == '') {
                     this.error = 'Не указано начальное время';
                     return;

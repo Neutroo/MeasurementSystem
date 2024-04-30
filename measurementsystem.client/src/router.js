@@ -2,6 +2,7 @@ import { createMemoryHistory, createRouter } from 'vue-router'
 
 import Login from './components/Login.vue'
 import DeviceData from './components/DeviceData.vue'
+import DeviceRegistration from './components/DeviceRegistration.vue'
 import Users from './components/Users.vue'
 
 const routes = [
@@ -15,7 +16,7 @@ const routes = [
     },
     {
         path: '/device-registration',
-        component: null
+        component: DeviceRegistration
     },
     {
         path: '/users',

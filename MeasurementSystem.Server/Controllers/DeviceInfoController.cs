@@ -42,9 +42,16 @@ namespace MeasurementSystemWebAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            var deviceInfo = deviceInfoDto.ToDomain();
-            deviceInfoRepository.Insert(deviceInfo);
-            deviceInfoRepository.Save();
+            try
+            {
+                var deviceInfo = deviceInfoDto.ToDomain();
+                deviceInfoRepository.Insert(deviceInfo);
+                deviceInfoRepository.Save();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
             return Ok();
         }
 

@@ -28,7 +28,7 @@
                         <div class="user-field">
                             <input type="password" class="user-input" v-model="confirmedPassword" placeholder="Повторный пароль" required>
                         </div>
-                        <button type="submit" class="add-user">
+                        <button type="submit" class="flat-button">
                             <AddUserIcon />
                         </button>
                     </form>
@@ -37,7 +37,7 @@
                     <table v-if="users">
                         <thead>
                             <tr>
-                                <th>Имя пользователя</th>
+                                <th class="username-field">Имя пользователя</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -59,8 +59,8 @@
             <div class="popup-content">
                 <p class="popup-text">Вы действительно хотите удалить пользователя {{ usernameForDelete }}?</p>
                 <div class="popup-buttons">
-                    <button class="add-user" @click="deleteUser(userIdForDelete)">Да</button>
-                    <button class="add-user" @click="isPopupVisible = false">Отмена</button>
+                    <button class="flat-button" @click="deleteUser(userIdForDelete)">Да</button>
+                    <button class="flat-button" @click="isPopupVisible = false">Отмена</button>
                 </div>
             </div>
         </div>
@@ -147,6 +147,8 @@
                 }
             },
             async addUser() {
+                this.error = '';
+
                 if (!this.isValid()) {
                     return;
                 }
@@ -185,8 +187,10 @@
                 }
             },
             async deleteUser(id) {
+                this.error = '';
+
                 if (this.getUsername === this.usernameForDelete) {
-                    this.error = 'Вы не можете удалить пользователя через которого сейчас авторизованы';
+                    this.error = 'Вы не можете удалить пользователя, через которого сейчас авторизованы';
                     this.isPopupVisible = false;
                     return;
                 }
@@ -202,6 +206,7 @@
                     if (response.ok) {
                         this.userIdForDelete = null;
                         this.getUsers();
+                        this.error = '';
                         this.isPopupVisible = false;
                     }
                     else {
@@ -352,7 +357,7 @@
         stroke: #29bca4;
     }
 
-    .add-user {
+    .flat-button {
         background: #339989;
         font-size: 14px;
         padding: 10px;
@@ -369,8 +374,8 @@
         transition: .2s;
     }
 
-    .add-user:active,
-    .add-user:hover {
+    .flat-button:active,
+    .flat-button:hover {
         background-color: #29bca4;
         transform: scale(1.02);
     }
@@ -396,6 +401,7 @@
 
     td {
         color: #495057;
+        text-align: center;
     }
 
     tr:nth-child(even) {
@@ -403,17 +409,16 @@
     }
 
     .username-field {
-        width: 160px; 
+        width: 165px; 
         word-break: break-all;
     }
 
     .cross-icon {
-        margin-top: 4px;
-        display: block;
-        padding: 0px 4px;
+        padding: 8px;
     }
 
     .delete-user {
+        display: flex;
         border: none;
         background: none;
     }
