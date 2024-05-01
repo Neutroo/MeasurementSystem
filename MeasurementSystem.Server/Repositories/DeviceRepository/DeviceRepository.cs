@@ -5,8 +5,10 @@ using MeasurementSystemWebAPI.Contexts;
 using MeasurementSystemWebAPI.Models;
 using MeasurementSystemWebAPI.Repositories.DeviceInfoRepository;
 using Newtonsoft.Json;
+using System.Diagnostics;
 using System.Dynamic;
 using System.Text;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MeasurementSystemWebAPI.Repositories.DeviceRepository
 {
@@ -71,9 +73,48 @@ namespace MeasurementSystemWebAPI.Repositories.DeviceRepository
             return records;
         }
 
+        public async Task<Dictionary<string, Record>> SelectAsyncNew(DateTime from, DateTime to)
+        {
+            var query = $"from(bucket: \"{dbContext.Bucket}\") |> range(start: {from.AddHours(-3).Subtract(DateTime.UnixEpoch).TotalSeconds}, " +
+                $"stop: {to.AddHours(-3).Subtract(DateTime.UnixEpoch).TotalSeconds}) " +
+                $"|> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")";
+            var tables = await dbContext.InfluxDBClient.GetQueryApi().QueryAsync(query, dbContext.Org);        
+
+            var deviceInfos = deviceInfoRepository.Select();
+            var deviceInfo = deviceInfos.ToDictionary(i => i.AuthKey, i => (i.Name, i.Serial));
+            var records = new Dictionary<string, Record>();
+            var index = 0;
+
+            foreach (var table in tables)
+            {
+                foreach (var tr in table.Records)
+                {                   
+                    var authKey = tr.Values["_measurement"].ToString();
+                    var utcTime = tr.Values["_time"];
+                    var localTime = DateTime.Parse(utcTime.ToString()).AddHours(3).ToString("yyyy-MM-dd HH:mm:ss");
+                    var fields = tr.Values.Skip(6).ToDictionary(r => r.Key, r => r.Value);
+
+                    var record = new Record()
+                    {
+                        Date = localTime,
+                        DeviceName = deviceInfo[authKey].Name,
+                        DeviceSerial = deviceInfo[authKey].Serial,
+                        Data = fields
+                    };
+                    records.Add(index.ToString(), record);
+                    ++index;
+                }
+            }
+
+            return records;
+        }
+
         public async Task<byte[]> SelectAsBytesAsync(DateTime from, DateTime to)
-        { 
-            var records = await SelectAsync(from, to);
+        {
+            Stopwatch stopwatch = new();
+            stopwatch.Start();
+            var records = await SelectAsyncNew(from, to);
+            await Console.Out.WriteLineAsync(stopwatch.ElapsedMilliseconds.ToString());
             var fileContents = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(records));
             return fileContents;
         }
