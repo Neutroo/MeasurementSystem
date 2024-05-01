@@ -81,7 +81,7 @@ namespace MeasurementSystemWebAPI.Repositories.DeviceRepository
             var tables = await dbContext.InfluxDBClient.GetQueryApi().QueryAsync(query, dbContext.Org);        
 
             var deviceInfos = deviceInfoRepository.Select();
-            //var deviceInfo = deviceInfos.ToDictionary(i => i.AuthKey, i => (i.Name, i.Serial));
+            var deviceInfo = deviceInfos.ToDictionary(i => i.AuthKey, i => (i.Name, i.Serial));
             var records = new Dictionary<string, Record>();
             var index = 0;
 
@@ -97,8 +97,8 @@ namespace MeasurementSystemWebAPI.Repositories.DeviceRepository
                     var record = new Record()
                     {
                         Date = localTime,
-                        DeviceName = "", //deviceInfo[authKey].Name,
-                        DeviceSerial = "", //deviceInfo[authKey].Serial,
+                        DeviceName = deviceInfo[authKey].Name,
+                        DeviceSerial = deviceInfo[authKey].Serial,
                         Data = fields
                     };
                     records.Add(index.ToString(), record);
