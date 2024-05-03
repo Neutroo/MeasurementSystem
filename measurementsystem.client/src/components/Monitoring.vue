@@ -51,9 +51,12 @@
         beforeMount() {
         },
         mounted() {
-            this.socket = new WebSocket('ws://127.0.0.1:3500/api/monitoring');
+            this.socket = new WebSocket('ws://dbrobo1.mgul.ac.ru/api/monitoring');
             this.socket.onmessage = (event) => {
                 this.messages.push(event.data);
+            };
+            this.socket.onopen = (event) => {
+                console.log('hello');
             };
         },
         updated() {
