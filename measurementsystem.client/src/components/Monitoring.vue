@@ -51,7 +51,7 @@
         beforeMount() {
         },
         mounted() {
-            this.socket = new WebSocket('ws://localhost:80/api/monitoring');
+            this.socket = new WebSocket('ws://localhost/api/monitoring');
             this.socket.onmessage = (event) => {
                 this.messages.push(event.data);
             };
