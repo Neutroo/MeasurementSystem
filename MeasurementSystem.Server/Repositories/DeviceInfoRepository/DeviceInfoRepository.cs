@@ -1,10 +1,10 @@
 ﻿using InfluxDB.Client.Api.Domain;
 using InfluxDB.Client.Core.Exceptions;
-using MeasurementSystemWebAPI.Contexts;
-using MeasurementSystemWebAPI.Models;
+using MeasurementSystem.Server.Contexts;
+using MeasurementSystem.Server.Models;
 using System.Data;
 
-namespace MeasurementSystemWebAPI.Repositories.DeviceInfoRepository
+namespace MeasurementSystem.Server.Repositories.DeviceInfoRepository
 {
     public class DeviceInfoRepository : IDeviceInfoRepository
     {

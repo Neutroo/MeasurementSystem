@@ -1,13 +1,13 @@
 ﻿using InfluxDB.Client.Api.Domain;
 using InfluxDB.Client.Core.Exceptions;
 using InfluxDB.Client.Writes;
-using MeasurementSystemWebAPI.Contexts;
-using MeasurementSystemWebAPI.Models;
-using MeasurementSystemWebAPI.Repositories.DeviceInfoRepository;
+using MeasurementSystem.Server.Models;
+using MeasurementSystem.Server.Contexts;
+using MeasurementSystem.Server.Repositories.DeviceInfoRepository;
 using Newtonsoft.Json;
 using System.Text;
 
-namespace MeasurementSystemWebAPI.Repositories.DeviceRepository
+namespace MeasurementSystem.Server.Repositories.DeviceRepository
 {
     public class DeviceRepository : IDeviceRepository
     {
@@ -63,7 +63,7 @@ namespace MeasurementSystemWebAPI.Repositories.DeviceRepository
             return fileContents;
         }
 
-        public void Insert(string device)
+        public Device Insert(string device)
         {
             JsonTextReader reader = new(new StringReader(device));
             Dictionary<string, string> keyValuePairs = new();
@@ -119,12 +119,21 @@ namespace MeasurementSystemWebAPI.Repositories.DeviceRepository
                     : point = point.Field(pair.Key, pair.Value);
             }
 
-            point = point.Timestamp(DateTime.UtcNow, WritePrecision.Ns);
+            var date = DateTime.UtcNow;
+
+            point = point.Timestamp(date, WritePrecision.Ns);
 
             using (var writeApi = dbContext.InfluxDBClient.GetWriteApi())
             {
                 writeApi.WritePoint(point, dbContext.Bucket, dbContext.Org);
             }
+
+            return new Device()
+            {
+                AKey = authKey,
+                Date = date.AddHours(3).ToString("yyyy-MM-dd HH:mm:ss"),
+                Fields = keyValuePairs
+            };
         }
     }
 }

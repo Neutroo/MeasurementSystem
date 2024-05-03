@@ -1,7 +1,7 @@
-﻿using MeasurementSystemWebAPI.Models;
+﻿using MeasurementSystem.Server.Models;
 using System.ComponentModel.DataAnnotations;
 
-namespace MeasurementSystemWebAPI.Dto
+namespace MeasurementSystem.Server.Dto
 {
     public class POSTUserDto
     {

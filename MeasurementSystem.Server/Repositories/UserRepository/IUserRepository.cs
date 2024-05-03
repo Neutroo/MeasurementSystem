@@ -1,6 +1,6 @@
-﻿using MeasurementSystemWebAPI.Models;
+﻿using MeasurementSystem.Server.Models;
 
-namespace MeasurementSystemWebAPI.Repositories.UserRepository
+namespace MeasurementSystem.Server.Repositories.UserRepository
 {
     public interface IUserRepository
     {

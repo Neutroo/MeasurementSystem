@@ -1,12 +1,12 @@
-﻿using MeasurementSystemWebAPI.Dto;
-using MeasurementSystemWebAPI.Repositories.UserRepository;
+﻿using MeasurementSystem.Server.Dto;
+using MeasurementSystem.Server.Repositories.UserRepository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace MeasurementSystemWebAPI.Controllers
+namespace MeasurementSystem.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

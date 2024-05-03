@@ -1,7 +1,7 @@
 ﻿using InfluxDB.Client;
 using System.Data.Common;
 
-namespace MeasurementSystemWebAPI.Contexts
+namespace MeasurementSystem.Server.Contexts
 {
     public class DeviceContext
     {

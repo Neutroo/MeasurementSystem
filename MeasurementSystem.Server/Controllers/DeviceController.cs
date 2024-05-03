@@ -1,10 +1,11 @@
 using MeasurementSystem.Server.Services;
-using MeasurementSystemWebAPI.Repositories.DeviceRepository;
+using MeasurementSystem.Server.Repositories.DeviceRepository;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using MeasurementSystem.Server.Models;
 
-namespace MeasurementSystemWebAPI.Controllers
+namespace MeasurementSystem.Server.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -99,15 +100,15 @@ namespace MeasurementSystemWebAPI.Controllers
 
             try
             {
-                var device = json.ToString();
-                Console.WriteLine(device);
+                var data = json.ToString();
 
-                if (string.IsNullOrEmpty(device))
+                if (string.IsNullOrEmpty(data))
                 {
                     return BadRequest("Пустой json");
                 }
 
-                deviceRepository.Insert(device);
+                Device device = deviceRepository.Insert(data);
+                monitoring.WriteMessageAsync(device);
             }
             catch (Exception ex)
             {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-namespace MeasurementSystemWebAPI.Attributes
+namespace MeasurementSystem.Server.AuthOptions
 {
     public class AuthOptions
     {

@@ -1,4 +1,6 @@
-﻿using System.Net.WebSockets;
+﻿using MeasurementSystem.Server.Models;
+using Newtonsoft.Json;
+using System.Net.WebSockets;
 using System.Text;
 
 namespace MeasurementSystem.Server.Services
@@ -33,9 +35,10 @@ namespace MeasurementSystem.Server.Services
             sockets.Remove(socket);
         }
 
-        public async Task WriteMessageAsync(string message)
+        public async Task WriteMessageAsync(Device device)
         {
-            var data = Encoding.UTF8.GetBytes(message);
+            var json = JsonConvert.SerializeObject(device);
+            var data = Encoding.UTF8.GetBytes(json);
             var buffer = new ArraySegment<byte>(data);
 
             foreach (var socket in sockets)

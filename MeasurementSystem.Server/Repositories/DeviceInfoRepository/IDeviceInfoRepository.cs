@@ -1,6 +1,6 @@
-﻿using MeasurementSystemWebAPI.Models;
+﻿using MeasurementSystem.Server.Models;
 
-namespace MeasurementSystemWebAPI.Repositories.DeviceInfoRepository
+namespace MeasurementSystem.Server.Repositories.DeviceInfoRepository
 {
     public interface IDeviceInfoRepository
     {

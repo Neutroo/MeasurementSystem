@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MeasurementSystemWebAPI.Dto
+namespace MeasurementSystem.Server.Dto
 {
     public class LoginDto
     {

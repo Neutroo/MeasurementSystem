@@ -1,7 +1,7 @@
-﻿using MeasurementSystemWebAPI.Models;
+﻿using MeasurementSystem.Server.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace MeasurementSystemWebAPI.Contexts
+namespace MeasurementSystem.Server.Contexts
 {
     public class PostgresContext : DbContext
     {

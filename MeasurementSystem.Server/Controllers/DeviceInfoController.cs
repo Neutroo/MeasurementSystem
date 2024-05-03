@@ -1,11 +1,11 @@
 ﻿using InfluxDB.Client.Core.Exceptions;
-using MeasurementSystemWebAPI.Dto;
-using MeasurementSystemWebAPI.Models;
-using MeasurementSystemWebAPI.Repositories.DeviceInfoRepository;
+using MeasurementSystem.Server.Dto;
+using MeasurementSystem.Server.Models;
+using MeasurementSystem.Server.Repositories.DeviceInfoRepository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MeasurementSystemWebAPI.Controllers
+namespace MeasurementSystem.Server.Controllers
 {
     [Route("/api/[controller]")]
     [ApiController, Authorize]

@@ -1,10 +1,10 @@
-﻿using MeasurementSystemWebAPI.Dto;
-using MeasurementSystemWebAPI.Models;
-using MeasurementSystemWebAPI.Repositories.UserRepository;
+﻿using MeasurementSystem.Server.Dto;
+using MeasurementSystem.Server.Models;
+using MeasurementSystem.Server.Repositories.UserRepository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MeasurementSystemWebAPI.Controllers
+namespace MeasurementSystem.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController, Authorize]

@@ -1,11 +1,11 @@
-﻿using MeasurementSystemWebAPI.Models;
+﻿using MeasurementSystem.Server.Models;
 
-namespace MeasurementSystemWebAPI.Repositories.DeviceRepository
+namespace MeasurementSystem.Server.Repositories.DeviceRepository
 {
     public interface IDeviceRepository
     {
         Task<Dictionary<string, Record>> SelectAsync(DateTime from, DateTime to);
         Task<byte[]> SelectAsBytesAsync(DateTime from, DateTime to);
-        void Insert(string device);
+        Device Insert(string device);
     }
 }

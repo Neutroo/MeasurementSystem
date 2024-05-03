@@ -17,6 +17,10 @@
                 <DataIcon class="data-icon" />
                 <p class="router-text">Данные по приборам</p>
             </router-link>
+            <router-link v-if="!isLoggedIn" class="router-field" to="/monitoring">
+                <UsersIcon />
+                <p class="router-text">Мониторинг</p>
+            </router-link>
             <router-link v-if="isLoggedIn" class="router-field" to="/device-registration">
                 <RegisteredDevicesIcon />
                 <p class="router-text">Регистрация устройств</p>

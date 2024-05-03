@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MeasurementSystemWebAPI.Models
+namespace MeasurementSystem.Server.Models
 {
     public class User
     {

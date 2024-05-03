@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace MeasurementSystemWebAPI.Models
+namespace MeasurementSystem.Server.Models
 {
     public class Record
     {

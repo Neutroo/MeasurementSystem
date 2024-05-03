@@ -1,9 +1,9 @@
 using MeasurementSystem.Server.Services;
-using MeasurementSystemWebAPI.Attributes;
-using MeasurementSystemWebAPI.Contexts;
-using MeasurementSystemWebAPI.Repositories.DeviceInfoRepository;
-using MeasurementSystemWebAPI.Repositories.DeviceRepository;
-using MeasurementSystemWebAPI.Repositories.UserRepository;
+using MeasurementSystem.Server.AuthOptions;
+using MeasurementSystem.Server.Contexts;
+using MeasurementSystem.Server.Repositories.DeviceInfoRepository;
+using MeasurementSystem.Server.Repositories.DeviceRepository;
+using MeasurementSystem.Server.Repositories.UserRepository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -64,6 +64,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 var app = builder.Build();
+
 app.UseWebSockets();
 
 app.UseDefaultFiles();
