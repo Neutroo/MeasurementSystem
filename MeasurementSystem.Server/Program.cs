@@ -1,3 +1,4 @@
+using MeasurementSystem.Server.Services;
 using MeasurementSystemWebAPI.Attributes;
 using MeasurementSystemWebAPI.Contexts;
 using MeasurementSystemWebAPI.Repositories.DeviceInfoRepository;
@@ -16,6 +17,7 @@ builder.Services.AddDbContext<PostgresContext>();
 builder.Services.AddScoped<IDeviceInfoRepository, DeviceInfoRepository>();
 builder.Services.AddScoped<IDeviceRepository, DeviceRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddSingleton<MonitoringService>();
 
 builder.Services.AddSwaggerGen(option =>
 {
@@ -62,6 +64,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 var app = builder.Build();
+app.UseWebSockets();
 
 app.UseDefaultFiles();
 app.UseStaticFiles();

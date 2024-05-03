@@ -5,10 +5,7 @@ using MeasurementSystemWebAPI.Contexts;
 using MeasurementSystemWebAPI.Models;
 using MeasurementSystemWebAPI.Repositories.DeviceInfoRepository;
 using Newtonsoft.Json;
-using System.Diagnostics;
-using System.Dynamic;
 using System.Text;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MeasurementSystemWebAPI.Repositories.DeviceRepository
 {
@@ -26,59 +23,9 @@ namespace MeasurementSystemWebAPI.Repositories.DeviceRepository
         public async Task<Dictionary<string, Record>> SelectAsync(DateTime from, DateTime to)
         {
             var query = $"from(bucket: \"{dbContext.Bucket}\") |> range(start: {from.AddHours(-3).Subtract(DateTime.UnixEpoch).TotalSeconds}, " +
-                $"stop: {to.AddHours(-3).Subtract(DateTime.UnixEpoch).TotalSeconds})";
-            var tables = await dbContext.InfluxDBClient.GetQueryApi().QueryAsync(query, dbContext.Org);
-
-            var data = new Dictionary<string, Dictionary<DateTime, IDictionary<string, object>>>();
-
-            foreach (var table in tables)
-            {
-                foreach (var record in table.Records)
-                {
-                    var authKey = record.Values["_measurement"].ToString();
-                    var utcTime = record.Values["_time"];
-                    var localTime = DateTime.Parse(utcTime.ToString()).AddHours(3);
-                    var field = record.Values["_field"].ToString();
-                    var value = record.Values["_value"];
-
-                    data.TryAdd(authKey, []);
-                    data[authKey].TryAdd(localTime, new ExpandoObject());
-                    data[authKey][localTime].Add(field, value);
-                }
-            }
-
-            var records = new Dictionary<string, Record>();
-            var index = 0;
-            var deviceInfos = deviceInfoRepository.Select();
-
-            foreach (var (authKey, dateToFields) in data)
-            {
-                var deviceInfo = deviceInfos.FirstOrDefault(d => d.AuthKey == authKey)
-                    ?? throw new NotFoundException($"Невалидный ключ аутентификации устройства: {authKey}");
-
-                foreach (var (date, fields) in dateToFields)
-                {
-                    var record = new Record()
-                    {
-                        Date = date.ToString("yyyy-MM-dd HH:mm:ss"),
-                        DeviceName = deviceInfo.Name,
-                        DeviceSerial = deviceInfo.Serial,
-                        Data = fields
-                    };
-                    records.Add(index.ToString(), record);
-                    ++index;
-                }
-            }
-
-            return records;
-        }
-
-        public async Task<Dictionary<string, Record>> SelectAsyncNew(DateTime from, DateTime to)
-        {
-            var query = $"from(bucket: \"{dbContext.Bucket}\") |> range(start: {from.AddHours(-3).Subtract(DateTime.UnixEpoch).TotalSeconds}, " +
                 $"stop: {to.AddHours(-3).Subtract(DateTime.UnixEpoch).TotalSeconds}) " +
                 $"|> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")";
-            var tables = await dbContext.InfluxDBClient.GetQueryApi().QueryAsync(query, dbContext.Org);        
+            var tables = await dbContext.InfluxDBClient.GetQueryApi().QueryAsync(query, dbContext.Org);
 
             var deviceInfos = deviceInfoRepository.Select();
             var deviceInfo = deviceInfos.ToDictionary(i => i.AuthKey, i => (i.Name, i.Serial));
@@ -88,7 +35,7 @@ namespace MeasurementSystemWebAPI.Repositories.DeviceRepository
             foreach (var table in tables)
             {
                 foreach (var tr in table.Records)
-                {                   
+                {
                     var authKey = tr.Values["_measurement"].ToString();
                     var utcTime = tr.Values["_time"];
                     var localTime = DateTime.Parse(utcTime.ToString()).AddHours(3).ToString("yyyy-MM-dd HH:mm:ss");
@@ -111,10 +58,7 @@ namespace MeasurementSystemWebAPI.Repositories.DeviceRepository
 
         public async Task<byte[]> SelectAsBytesAsync(DateTime from, DateTime to)
         {
-            Stopwatch stopwatch = new();
-            stopwatch.Start();
-            var records = await SelectAsyncNew(from, to);
-            await Console.Out.WriteLineAsync(stopwatch.ElapsedMilliseconds.ToString());
+            var records = await SelectAsync(from, to);
             var fileContents = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(records));
             return fileContents;
         }
@@ -181,9 +125,6 @@ namespace MeasurementSystemWebAPI.Repositories.DeviceRepository
             {
                 writeApi.WritePoint(point, dbContext.Bucket, dbContext.Org);
             }
-
-            string result = JsonConvert.SerializeObject(keyValuePairs);
-            Console.WriteLine(result);
         }
     }
 }

@@ -1,7 +1,8 @@
-using MeasurementSystemWebAPI.Repositories.DeviceInfoRepository;
+using MeasurementSystem.Server.Services;
 using MeasurementSystemWebAPI.Repositories.DeviceRepository;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace MeasurementSystemWebAPI.Controllers
 {
@@ -11,14 +12,14 @@ namespace MeasurementSystemWebAPI.Controllers
     {
         private readonly ILogger<DeviceController> logger;
         private readonly IDeviceRepository deviceRepository;
-        private readonly IDeviceInfoRepository deviceInfoRepository;
+        private readonly MonitoringService monitoring;
 
-        public DeviceController(ILogger<DeviceController> logger, IDeviceRepository deviceRepository,
-            IDeviceInfoRepository deviceInfoRepository)
+        public DeviceController(ILogger<DeviceController> logger, IDeviceRepository deviceRepository, 
+            MonitoringService monitoring)
         {
             this.logger = logger;
-            this.deviceRepository = deviceRepository;           
-            this.deviceInfoRepository = deviceInfoRepository;
+            this.deviceRepository = deviceRepository;
+            this.monitoring = monitoring;
         }
 
         /// <summary>
@@ -99,6 +100,7 @@ namespace MeasurementSystemWebAPI.Controllers
             try
             {
                 var device = json.ToString();
+                Console.WriteLine(device);
 
                 if (string.IsNullOrEmpty(device))
                 {
