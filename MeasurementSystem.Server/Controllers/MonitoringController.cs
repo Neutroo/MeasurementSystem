@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MeasurementSystem.Server.Controllers
 {
-    [Route("websocket/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class MonitoringController : ControllerBase
     {
