@@ -25,6 +25,7 @@ namespace MeasurementSystem.Server.Controllers
             }
             else
             {
+                await Console.Out.WriteLineAsync("not connected");
                 HttpContext.Response.StatusCode = 400;
                 await Response.WriteAsync("Expected a WebSocket request");
             }
