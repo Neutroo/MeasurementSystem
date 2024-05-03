@@ -51,7 +51,7 @@
         beforeMount() {
         },
         mounted() {
-            this.socket = new WebSocket('ws://dbrobo.mgul.ac.ru:80/api/monitoring');
+            this.socket = new WebSocket('ws://dbrobo1.mgul.ac.ru:80/api/monitoring');
             this.socket.onmessage = (event) => {
                 this.messages.push(event.data);
             };
