@@ -20,15 +20,14 @@ export default defineConfig({
         proxy: {
             '/api': {
                 target,
-                secure: false,
-                ws: true
-            }/*,
+                secure: false
+            },
             '/api/monitoring': {
-                target: 'http://dbrobo1.mgul.ac.ru',
+                target: 'ws://dbrobo1.mgul.ac.ru',
                 secure: false,
                 ws: true,
                 changeOrigin: true,
-            },*/
+            },
         },
         port: 5173
     }
