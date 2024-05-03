@@ -85,13 +85,19 @@ namespace MeasurementSystem.Server.Controllers
             }
         }
 
+        [HttpPost("mon")]
+        public async void Postt()
+        {
+            await monitoring.WriteMessageAsync(null);
+        }
+
         /// <summary>
         /// Добавить данные по прибору
         /// </summary>
         /// <param name="json">Json-объект с данными</param>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult Post(object json)
+        public async Task<IActionResult> Post(object json)
         {
             if (json == null)
             {
@@ -108,7 +114,7 @@ namespace MeasurementSystem.Server.Controllers
                 }
 
                 Device device = deviceRepository.Insert(data);
-                monitoring.WriteMessageAsync(device);
+                await monitoring.WriteMessageAsync(device);
             }
             catch (Exception ex)
             {

@@ -19,6 +19,7 @@ namespace MeasurementSystem.Server.Controllers
         {
             if (HttpContext.WebSockets.IsWebSocketRequest)
             {
+                await Console.Out.WriteLineAsync("connected");
                 var webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
                 await monitoring.HandleWebSocketConnection(webSocket);
             }
