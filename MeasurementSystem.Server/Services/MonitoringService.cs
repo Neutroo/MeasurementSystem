@@ -1,5 +1,6 @@
 ﻿using MeasurementSystem.Server.Models;
 using Newtonsoft.Json;
+using System.Collections.Concurrent;
 using System.Net.WebSockets;
 using System.Text;
 
@@ -7,14 +8,17 @@ namespace MeasurementSystem.Server.Services
 {
     public class MonitoringService
     {
-        private readonly List<WebSocket> sockets;
+        //private readonly List<WebSocket> sockets;
+        private readonly ConcurrentQueue<Device> devices;
+
 
         public MonitoringService()
         {
-            sockets = [];
+            //sockets = [];
+            devices = [];
         }
 
-        public async Task HandleWebSocketConnection(WebSocket socket)
+        /*public async Task HandleWebSocketConnection(WebSocket socket)
         {
             sockets.Add(socket);
             var buffer = new byte[1024 * 2];
@@ -33,18 +37,25 @@ namespace MeasurementSystem.Server.Services
                 }
             }
             sockets.Remove(socket);
-        }
+        }*/
 
-        public async Task WriteMessageAsync(Device device)
+        public void WriteMessage(Device device)
         {
-            var json = JsonConvert.SerializeObject(device);
+            devices.Enqueue(device);
+            /*var json = JsonConvert.SerializeObject(device);
             var data = Encoding.UTF8.GetBytes(json);
             var buffer = new ArraySegment<byte>(data);
 
             foreach (var socket in sockets)
             {
                 await socket.SendAsync(buffer, WebSocketMessageType.Text, true, CancellationToken.None);
-            }
+            }*/
+        }
+
+        public Device GetMessage()
+        {
+            devices.TryDequeue(out Device device);
+            return device;
         }
     }
 }

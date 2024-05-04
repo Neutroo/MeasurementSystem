@@ -10,7 +10,7 @@ namespace MeasurementSystem.Server.Contexts
 
         public PostgresContext()
         {
-            Database.EnsureCreated();
+            //Database.EnsureCreated();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

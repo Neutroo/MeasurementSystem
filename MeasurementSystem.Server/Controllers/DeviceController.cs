@@ -86,9 +86,9 @@ namespace MeasurementSystem.Server.Controllers
         }
 
         [HttpPost("mon")]
-        public async void Postt()
+        public void Postt()
         {
-            await monitoring.WriteMessageAsync(null);
+            monitoring.WriteMessage(null);
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace MeasurementSystem.Server.Controllers
                 }
 
                 Device device = deviceRepository.Insert(data);
-                await monitoring.WriteMessageAsync(device);
+                monitoring.WriteMessage(device);
             }
             catch (Exception ex)
             {

@@ -47,17 +47,21 @@
         beforeCreate() {
         },
         created() {
+            this.fetchData();
+            this.polling = setInterval(() => {
+                this.fetchData(); 
+            }, 2000);
         },
         beforeMount() {
         },
         mounted() {
-            this.socket = new WebSocket('ws://localhost:3500/api/monitoring/');
+            /*this.socket = new WebSocket('ws://localhost:3500/api/monitoring/');
             this.socket.onmessage = (event) => {
                 this.messages.push(event.data);
             };
             this.socket.onopen = (event) => {
                 console.log('hello');
-            };
+            };*/
         },
         updated() {
         },
@@ -73,6 +77,27 @@
             sendMessage() {
                 this.socket.send(this.newMessage);
                 this.newMessage = "";
+            },
+            async fetchData() {
+                try {
+                    const response = await fetch('api/monitoring');
+
+                    if (response.ok) {
+                        const message = await response.json();
+                        this.messages.push(message);
+                    }
+                    else {
+                        if (response.status === 500) {
+                            this.error = 'Status: 500. Internal Server Error.';
+                        }
+                        else {
+                            this.error = await response.text();
+                        }
+                    }
+                }
+                catch (error) {
+                    console.log(error);
+                }
             }
         }
     });

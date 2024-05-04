@@ -1,4 +1,5 @@
-﻿using MeasurementSystem.Server.Services;
+﻿using MeasurementSystem.Server.Models;
+using MeasurementSystem.Server.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MeasurementSystem.Server.Controllers
@@ -15,9 +16,11 @@ namespace MeasurementSystem.Server.Controllers
         }
 
         [HttpGet]
-        public async Task Connect()
+        public ActionResult<Device> Get()
         {
-            if (HttpContext.WebSockets.IsWebSocketRequest)
+            var device = monitoring.GetMessage();
+            return device;
+            /*if (HttpContext.WebSockets.IsWebSocketRequest)
             {
                 await Console.Out.WriteLineAsync("connected");
                 var webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
@@ -28,7 +31,7 @@ namespace MeasurementSystem.Server.Controllers
                 await Console.Out.WriteLineAsync("not connected");
                 HttpContext.Response.StatusCode = 400;
                 await Response.WriteAsync("Expected a WebSocket request");
-            }
+            }*/
         }
     }
 }
