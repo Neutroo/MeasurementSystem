@@ -21,13 +21,7 @@ export default defineConfig({
             '/api': {
                 target,
                 secure: false
-            },
-            '/api/monitoring': {
-                target: 'ws://dbrobo1.mgul.ac.ru',
-                secure: false,
-                ws: true,
-                changeOrigin: true,
-            },
+            }
         },
         port: 5173
     }
