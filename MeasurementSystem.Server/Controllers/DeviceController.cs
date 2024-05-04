@@ -123,7 +123,7 @@ namespace MeasurementSystem.Server.Controllers
 
                 Device device = deviceRepository.Insert(data);
 
-                WriteInfoToMonitoringService(device);
+                //WriteInfoToMonitoringService(device);
             }
             catch (Exception ex)
             {
