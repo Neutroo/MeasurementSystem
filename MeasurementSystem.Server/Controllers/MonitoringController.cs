@@ -2,6 +2,7 @@
 using MeasurementSystem.Server.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 
 namespace MeasurementSystem.Server.Controllers
 {
@@ -20,6 +21,9 @@ namespace MeasurementSystem.Server.Controllers
         public ActionResult<IEnumerable<Message>> Get()
         {
             var messages = monitoring.GetMessages();
+
+            Console.WriteLine(JsonConvert.SerializeObject(messages));
+
             return messages.IsNullOrEmpty() ? NoContent() : Ok(messages);
         }
     }

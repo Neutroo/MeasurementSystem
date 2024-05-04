@@ -123,7 +123,7 @@ namespace MeasurementSystem.Server.Controllers
 
                 Device device = deviceRepository.Insert(data);
 
-                _ = WriteInfoToMonitoringServiceAsync(device);
+                WriteInfoToMonitoringService(device);
             }
             catch (Exception ex)
             {
@@ -134,9 +134,9 @@ namespace MeasurementSystem.Server.Controllers
             return Ok();
         }
 
-        private async Task WriteInfoToMonitoringServiceAsync(Device device)
+        private void WriteInfoToMonitoringService(Device device)
         {
-            var infos = await deviceInfoRepository.SelectAsync();
+            var infos = deviceInfoRepository.Select();
             var deviceInfo = infos.ToDictionary(i => i.AuthKey, i => (i.Name, i.Serial));
 
             var record = new Record()

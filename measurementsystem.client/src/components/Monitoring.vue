@@ -75,7 +75,8 @@
 
                     if (response.ok) {
                         const newMessages = await response.json();
-                        this.messages.concat(newMessages);
+                        this.messages.push(newMessages);
+                        //this.messages.concat(newMessages);
                     }
                     else {
                         if (response.status === 500) {
