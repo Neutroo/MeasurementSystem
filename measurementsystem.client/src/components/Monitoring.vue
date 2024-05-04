@@ -75,6 +75,7 @@
 
                     if (response.ok) {
                         const newMessages = await response.json();
+                        console.log(newMessages);
                         this.messages.push(newMessages);
                         //this.messages.concat(newMessages);
                     }

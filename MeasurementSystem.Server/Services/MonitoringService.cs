@@ -1,15 +1,15 @@
 ﻿using MeasurementSystem.Server.Models;
-using System.Collections.Concurrent;
 
 namespace MeasurementSystem.Server.Services
 {
     public class MonitoringService
     {
-        private readonly ConcurrentQueue<Message> messages;
+        private readonly FixedSizedConcurrentQueue<Message> messages;
+        private const int MESSAGE_POOL_CAPACITY = 10;
 
         public MonitoringService()
         {
-            messages = [];
+            messages = new FixedSizedConcurrentQueue<Message>(MESSAGE_POOL_CAPACITY);
         }
 
         public void WriteMessage(Message message)
@@ -19,17 +19,7 @@ namespace MeasurementSystem.Server.Services
 
         public IEnumerable<Message> GetMessages()
         {
-            var result = new List<Message>();
-            while (!messages.IsEmpty) 
-            {
-                messages.TryDequeue(out Message? message);
-
-                if (message != null)
-                {
-                    result.Add(message);
-                }
-            }
-            return result;
+            return messages.ToArray();
         }
     }
 }

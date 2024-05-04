@@ -17,11 +17,6 @@ namespace MeasurementSystem.Server.Repositories.DeviceInfoRepository
 
         public IEnumerable<DeviceInfo> Select() => dbContext.DeviceInfos.AsEnumerable();
 
-        public async Task<IEnumerable<DeviceInfo>> SelectAsync() 
-        {
-            return await dbContext.DeviceInfos.ToListAsync();
-        }
-
         public DeviceInfo Select(int id)
         {
             var deviceInfo = dbContext.DeviceInfos.Find(id) ?? throw new NotFoundException("Нет объекта с таким id");
