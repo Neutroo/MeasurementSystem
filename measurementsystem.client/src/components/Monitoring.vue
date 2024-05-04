@@ -74,8 +74,8 @@
                     const response = await fetch('api/monitoring');
 
                     if (response.ok) {
-                        const message = await response.json();
-                        this.messages.push(message);
+                        const newMessages = await response.json();
+                        this.messages.concat(newMessages);
                     }
                     else {
                         if (response.status === 500) {

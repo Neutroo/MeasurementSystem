@@ -1,7 +1,7 @@
-﻿using InfluxDB.Client.Api.Domain;
-using InfluxDB.Client.Core.Exceptions;
+﻿using InfluxDB.Client.Core.Exceptions;
 using MeasurementSystem.Server.Contexts;
 using MeasurementSystem.Server.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Data;
 
 namespace MeasurementSystem.Server.Repositories.DeviceInfoRepository
@@ -16,6 +16,11 @@ namespace MeasurementSystem.Server.Repositories.DeviceInfoRepository
         }
 
         public IEnumerable<DeviceInfo> Select() => dbContext.DeviceInfos.AsEnumerable();
+
+        public async Task<IEnumerable<DeviceInfo>> SelectAsync() 
+        {
+            return await dbContext.DeviceInfos.ToListAsync();
+        }
 
         public DeviceInfo Select(int id)
         {

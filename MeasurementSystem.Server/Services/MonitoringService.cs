@@ -1,61 +1,35 @@
 ﻿using MeasurementSystem.Server.Models;
-using Newtonsoft.Json;
 using System.Collections.Concurrent;
-using System.Net.WebSockets;
-using System.Text;
 
 namespace MeasurementSystem.Server.Services
 {
     public class MonitoringService
     {
-        //private readonly List<WebSocket> sockets;
-        private readonly ConcurrentQueue<Device> devices;
-
+        private readonly ConcurrentQueue<Message> messages;
 
         public MonitoringService()
         {
-            //sockets = [];
-            devices = [];
+            messages = [];
         }
 
-        /*public async Task HandleWebSocketConnection(WebSocket socket)
+        public void WriteMessage(Message message)
         {
-            sockets.Add(socket);
-            var buffer = new byte[1024 * 2];
-            while (socket.State == WebSocketState.Open)
-            {
-                var result = await socket.ReceiveAsync(new ArraySegment<byte>(buffer), default);
-                if (result.MessageType == WebSocketMessageType.Close)
-                {
-                    await socket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, default);
-                    break;
-                }
+            messages.Enqueue(message);
+        }
 
-                foreach (var s in sockets)
+        public IEnumerable<Message> GetMessages()
+        {
+            var result = new List<Message>();
+            while (!messages.IsEmpty) 
+            {
+                messages.TryDequeue(out Message? message);
+
+                if (message != null)
                 {
-                    await s.SendAsync(buffer[..result.Count], WebSocketMessageType.Text, true, default);
+                    result.Add(message);
                 }
             }
-            sockets.Remove(socket);
-        }*/
-
-        public void WriteMessage(Device device)
-        {
-            devices.Enqueue(device);
-            /*var json = JsonConvert.SerializeObject(device);
-            var data = Encoding.UTF8.GetBytes(json);
-            var buffer = new ArraySegment<byte>(data);
-
-            foreach (var socket in sockets)
-            {
-                await socket.SendAsync(buffer, WebSocketMessageType.Text, true, CancellationToken.None);
-            }*/
-        }
-
-        public Device GetMessage()
-        {
-            devices.TryDequeue(out Device device);
-            return device;
+            return result;
         }
     }
 }

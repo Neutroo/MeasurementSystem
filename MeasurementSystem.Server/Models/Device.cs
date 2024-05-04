@@ -4,6 +4,6 @@
     {
         public required string AKey { get; set; }
         public required string Date { get; set; }
-        public required Dictionary<string, string> Fields { get; set; }
+        public required IDictionary<string, object> Data { get; set; }
     }
 }

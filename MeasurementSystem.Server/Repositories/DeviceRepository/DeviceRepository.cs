@@ -128,11 +128,15 @@ namespace MeasurementSystem.Server.Repositories.DeviceRepository
                 writeApi.WritePoint(point, dbContext.Bucket, dbContext.Org);
             }
 
+            var fields = keyValuePairs.ToDictionary(r => r.Key, r => (object)r.Value);
+
+            Console.WriteLine(date.AddHours(3).ToString("yyyy-MM-dd HH:mm:ss"));
+
             return new Device()
             {
                 AKey = authKey,
                 Date = date.AddHours(3).ToString("yyyy-MM-dd HH:mm:ss"),
-                Fields = keyValuePairs
+                Data = fields
             };
         }
     }

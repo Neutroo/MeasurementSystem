@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using MeasurementSystem.Server.Models;
+using MeasurementSystem.Server.Repositories.DeviceInfoRepository;
 
 namespace MeasurementSystem.Server.Controllers
 {
@@ -13,13 +14,15 @@ namespace MeasurementSystem.Server.Controllers
     {
         private readonly ILogger<DeviceController> logger;
         private readonly IDeviceRepository deviceRepository;
+        private readonly IDeviceInfoRepository deviceInfoRepository;
         private readonly MonitoringService monitoring;
 
-        public DeviceController(ILogger<DeviceController> logger, IDeviceRepository deviceRepository, 
-            MonitoringService monitoring)
+        public DeviceController(ILogger<DeviceController> logger, IDeviceRepository deviceRepository,
+            IDeviceInfoRepository deviceInfoRepository, MonitoringService monitoring)
         {
             this.logger = logger;
             this.deviceRepository = deviceRepository;
+            this.deviceInfoRepository = deviceInfoRepository;
             this.monitoring = monitoring;
         }
 
@@ -85,10 +88,15 @@ namespace MeasurementSystem.Server.Controllers
             }
         }
 
-        [HttpPost("mon")]
+        [HttpPost("err")]
         public void Postt()
         {
-            monitoring.WriteMessage(null);
+            var message = new Message()
+            {
+                Type = "Error",
+                Content = "Ошибка такая-то.."
+            };
+            monitoring.WriteMessage(message);
         }
 
         /// <summary>
@@ -114,7 +122,8 @@ namespace MeasurementSystem.Server.Controllers
                 }
 
                 Device device = deviceRepository.Insert(data);
-                monitoring.WriteMessage(device);
+
+                _ = WriteInfoToMonitoringServiceAsync(device);
             }
             catch (Exception ex)
             {
@@ -123,6 +132,28 @@ namespace MeasurementSystem.Server.Controllers
             }
 
             return Ok();
+        }
+
+        private async Task WriteInfoToMonitoringServiceAsync(Device device)
+        {
+            var infos = await deviceInfoRepository.SelectAsync();
+            var deviceInfo = infos.ToDictionary(i => i.AuthKey, i => (i.Name, i.Serial));
+
+            var record = new Record()
+            {
+                DeviceName = deviceInfo[device.AKey].Name,
+                DeviceSerial = deviceInfo[device.AKey].Serial,
+                Date = device.Date,
+                Data = device.Data
+            };
+
+            var message = new Message()
+            {
+                Type = "Record",
+                Content = record
+            };
+
+            monitoring.WriteMessage(message);
         }
     }
 }

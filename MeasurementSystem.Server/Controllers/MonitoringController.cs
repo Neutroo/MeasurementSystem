@@ -1,6 +1,7 @@
 ﻿using MeasurementSystem.Server.Models;
 using MeasurementSystem.Server.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace MeasurementSystem.Server.Controllers
 {
@@ -16,10 +17,10 @@ namespace MeasurementSystem.Server.Controllers
         }
 
         [HttpGet]
-        public ActionResult<Device> Get()
+        public ActionResult<IEnumerable<Message>> Get()
         {
-            var device = monitoring.GetMessage();
-            return device;
+            var messages = monitoring.GetMessages();
+            return messages.IsNullOrEmpty() ? NoContent() : Ok(messages);
         }
     }
 }
