@@ -12,7 +12,6 @@
                 <div id="messages">
                     <p v-for="msg in messages">{{ msg }}</p>
                 </div>
-                <input id="chatbox" v-model="newMessage" @keyup.enter="sendMessage">
             </div>
         </div>
     </div>
@@ -34,8 +33,6 @@
         data() {
             return {       
                 messages: [],
-                newMessage: '',
-                socket: null,
                 error: ''
             }
         },
@@ -55,13 +52,6 @@
         beforeMount() {
         },
         mounted() {
-            /*this.socket = new WebSocket('ws://localhost:3500/api/monitoring/');
-            this.socket.onmessage = (event) => {
-                this.messages.push(event.data);
-            };
-            this.socket.onopen = (event) => {
-                console.log('hello');
-            };*/
         },
         updated() {
         },
@@ -72,6 +62,7 @@
         beforeDestroy() {
         },
         destroyed() {
+            clearInterval(this.polling);
         },
         methods: {
             sendMessage() {
