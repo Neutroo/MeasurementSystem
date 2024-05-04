@@ -47,7 +47,7 @@
             this.fetchData();
             this.polling = setInterval(() => {
                 this.fetchData(); 
-            }, 2000);
+            }, 3000);
         },
         beforeMount() {
         },
@@ -76,7 +76,7 @@
                     if (response.ok) {
                         const newMessages = await response.json();
                         console.log(newMessages);
-                        this.messages.push(newMessages);
+                        this.messages = newMessages;
                         //this.messages.concat(newMessages);
                     }
                     else {
