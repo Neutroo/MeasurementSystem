@@ -16,13 +16,13 @@
                 <div v-if="isAddingInfo" class="title-container">
                     <span class="title">Новый прибор</span>
                     <button class="back" @click="toggleInfoForm">
-                        <BackIcon class="back-icon" />
+                        <BackIcon />
                     </button>
                 </div>
                 <div v-if="isEditInfo" class="title-container">
                     <span class="title">Редактирование</span>
                     <button class="back" @click="toggleEditForm">
-                        <BackIcon class="back-icon" />
+                        <BackIcon />
                     </button>
                 </div>
             </header>
