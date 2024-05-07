@@ -1,34 +1,18 @@
 <script setup>
-    import PauseIcon from './icons/IconPause.vue'
-    import UnpauseIcon from './icons/IconUnpause.vue'
-    import MonitoringItem from './MonitoringItem.vue'
+    import CrossIcon from './icons/IconCross.vue'
+    import BackIcon from './icons/IconBack.vue'
+    import AddUserIcon from './icons/IconAddUser.vue'
+    import Error from './Error.vue'
 </script>
 
 <template>
     <div class="container">
-        <div class="screen">
+        <div class="screen">      
             <div>
-            </div>
-            <header>
-                <div class="title-container">
-                    <span class="title">Сообщения</span>
-                    <button class="pause" @click="togglePause" @mouseenter="changeIconColor" @mouseleave="resetIconColor">
-                        <PauseIcon v-if="!pause" :fillColor="iconColor" />
-                        <UnpauseIcon v-else :fillColor="iconColor" />
-                    </button>
+                <div id="messages">
+                    <p v-for="msg in messages">{{ msg }}</p>
                 </div>
-            </header>
-            <main>
-                 <table v-if="messages">
-                     <tbody>
-                         <tr v-for="message in messages" :key="message">
-                             <td class="name-field">
-                                 <MonitoringItem :data="message" />
-                             </td>
-                         </tr>
-                     </tbody>
-                 </table>
-            </main>
+            </div>
         </div>
     </div>
 </template>
@@ -48,11 +32,8 @@
         },
         data() {
             return {       
-                messages: [
-                ],
-                polling: null,
-                pause: false,
-                iconColor: '#339989'
+                messages: [],
+                error: ''
             }
         },
         computed: {
@@ -62,34 +43,31 @@
         },
         beforeCreate() {
         },
-        created() {           
-        },
-        beforeMount() {       
-        },
-        mounted() {
+        created() {
             this.fetchData();
             this.polling = setInterval(() => {
-                if (!this.pause) {
-                    this.fetchData();
-                }
+                this.fetchData(); 
             }, 3000);
         },
-        unmounted() {
-            clearInterval(this.polling);          
+        beforeMount() {
+        },
+        mounted() {
         },
         updated() {
         },
         activated() {
         },
-        deactivated() {           
+        deactivated() {
         },
         beforeDestroy() {
         },
         destroyed() {
+            clearInterval(this.polling);
         },
         methods: {
-            togglePause() {
-                this.pause = !this.pause;
+            sendMessage() {
+                this.socket.send(this.newMessage);
+                this.newMessage = "";
             },
             async fetchData() {
                 try {
@@ -97,7 +75,9 @@
 
                     if (response.ok) {
                         const newMessages = await response.json();
+                        console.log(newMessages);
                         this.messages = newMessages;
+                        //this.messages.concat(newMessages);
                     }
                     else {
                         if (response.status === 500) {
@@ -111,13 +91,7 @@
                 catch (error) {
                     console.log(error);
                 }
-            },
-            changeIconColor() {
-                this.iconColor = '#29bca4';
-            },
-            resetIconColor() {
-                this.iconColor = '#339989';
-            },
+            }
         }
     });
 </script>
@@ -139,50 +113,8 @@
 
     .screen {
         background-color: #fffafb;
-        min-width: 70vh;
+        width: 900px;
         box-shadow: 0px 0px 24px #246a73;
         border-radius: 30px;
-    }
-
-    main {
-        display: flex;
-        align-items: center;
-        flex-direction: column;
-        padding: 20px;
-        padding-top: 10px;
-    }
-
-    tbody {
-        display: block;
-        max-height: 85vh;
-        overflow: auto;
-    }
-
-    .title-container {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 20px;
-        padding-bottom: 10px;
-    }
-
-    .title {
-        font-size: 18px;
-        color: #339989;
-        text-transform: uppercase;
-        font-weight: bold;
-    }
-
-    .pause {
-        outline: none;
-        border: none;
-        background: none;
-    }
-
-    .pause:active,
-    .pause:hover {
-        fill: #29bca4;
-        transform: scale(1.05);
-        cursor: pointer;
     }
 </style>

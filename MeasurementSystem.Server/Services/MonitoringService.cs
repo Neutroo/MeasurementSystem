@@ -19,7 +19,7 @@ namespace MeasurementSystem.Server.Services
 
         public IEnumerable<Message> GetMessages()
         {
-            return messages.ToArray().Reverse();
+            return messages.ToArray();
         }
     }
 }

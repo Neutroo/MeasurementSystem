@@ -1,6 +1,7 @@
 ﻿using InfluxDB.Client.Core.Exceptions;
 using MeasurementSystem.Server.Contexts;
 using MeasurementSystem.Server.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Data;
 
 namespace MeasurementSystem.Server.Repositories.DeviceInfoRepository
