@@ -37,28 +37,7 @@
     export default defineComponent({
         data() {
             return {       
-                messages: [{
-                    "type": "Record",
-                    "content": {
-                        "date": "2024-05-06 17:55:54",
-                        "deviceName": "Hydra-Lite",
-                        "deviceSerial": "04",
-                        "data": {
-                            "system_Serial": "04",
-                            "system_Version": "2024-02-10 (EXP)",
-                            "system_RSSI": "-46",
-                            "system_MAC": "34:94:54:95:C8:AC",
-                            "system_IP": "10.40.53.20",
-                            "BME280_temp": "19.63",
-                            "BME280_humidity": "43.89",
-                            "BME280_pressure": "755.03"
-                        }
-                    }
-                },
-                    {
-                        "type": "Error",
-                        "content": "Ошибка такая-то.."
-                    }],
+                messages: [],
                 polling: null,
                 pause: false,
                 iconColor: '#339989'
