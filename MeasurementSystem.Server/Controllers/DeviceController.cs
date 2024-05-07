@@ -88,17 +88,6 @@ namespace MeasurementSystem.Server.Controllers
             }
         }
 
-        [HttpPost("err")]
-        public void Postt()
-        {
-            var message = new Message()
-            {
-                Type = "Error",
-                Content = "Ошибка такая-то.."
-            };
-            monitoring.WriteMessage(message);
-        }
-
         /// <summary>
         /// Добавить данные по прибору
         /// </summary>
