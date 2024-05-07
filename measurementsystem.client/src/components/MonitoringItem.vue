@@ -8,7 +8,7 @@
             <div class="field-header">Имя</div>
             <div class="field-value">{{ message.content.deviceName }}</div>
         </div>
-        <div class="field time">
+        <div class="field">
             <div class="field-header">Время</div>
             <div class="field-value">{{ message.content.date }}</div>
         </div>
@@ -74,6 +74,7 @@
         gap: 10px;
         background: #ecf8f6;
         margin: 2px 0;
+        padding: 5px;
     }
 
     .error-container {
@@ -92,6 +93,13 @@
         flex-direction: column;
         gap: 3px;
         padding: 5px;
+        font-size: 14px;
+        border-radius: 10px;
+        border: 2px solid rgba(51, 153, 137, 0.5);
+    }
+
+    .error-container .field {
+        border: none;
     }
 
     .field-header {
@@ -102,10 +110,6 @@
     .field-value {
         color: #495057;
         text-align: center;
-    }
-
-    .time {
-        width: 110px;
     }
 
     .field-value {

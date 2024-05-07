@@ -48,8 +48,7 @@
         },
         data() {
             return {       
-                messages: [
-                ],
+                messages: [],
                 polling: null,
                 pause: false,
                 iconColor: '#339989'
