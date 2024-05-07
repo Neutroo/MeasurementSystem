@@ -1,9 +1,5 @@
-<script setup>
-
-</script>
-
 <template>
-    <div v-if="message.type === 'Record'" class="record-container">
+    <div v-if="message.type === 'Record'" class="base-container record">
         <div class="field">
             <div class="field-header">Имя</div>
             <div class="field-value">{{ message.content.deviceName }}</div>
@@ -17,7 +13,7 @@
             <div class="field-value">{{ value }}</div>
         </div>
     </div>
-    <div v-else class="error-container">
+    <div v-else class="base-container error">
         <div class="field">
             <div class="field-header">Ошибка</div>
             <div class="field-value">{{ message.content }}</div>
@@ -45,13 +41,8 @@
                 return this.message.type === 'Record';
             }
         },
-        beforeCreate() {
-        },
         created() {
             this.message = toRaw(this.data);
-        },
-        methods: {
-
         }
     });
 </script>
@@ -64,28 +55,25 @@
         font-family: Raleway, sans-serif;
     }
 
-    .record-container {
+    .base-container {
         display: flex;
         align-items: center;
         justify-content: start;
-        flex-wrap: wrap;
-        border: 2px solid #339989;
-        border-radius: 10px;
         gap: 10px;
-        background: #ecf8f6;
-        margin: 2px 0;
+        border-radius: 10px;
         padding: 5px;
+        margin: 3px 0;
     }
 
-    .error-container {
-        display: flex;
-        align-items: center;
-        justify-content: start;
+    .record {
+        flex-wrap: wrap;
+        border: 2px solid #339989;
+        background: #ecf8f6;
+    }
+
+    .error {
         border: 2px solid #c32f27;
-        border-radius: 10px;
-        gap: 10px;
         background: #ffb3b3;
-        margin: 2px 0;
     }
 
     .field {
@@ -98,7 +86,7 @@
         border: 2px solid rgba(51, 153, 137, 0.5);
     }
 
-    .error-container .field {
+    .error .field {
         border: none;
     }
 
@@ -108,17 +96,6 @@
     }
 
     .field-value {
-        color: #495057;
-        text-align: center;
-    }
-
-    .field-value {
-        color: #495057;
-        text-align: center;
-    }
-
-    .error-container .field-value {
-        color: black;
         text-align: center;
     }
 </style>

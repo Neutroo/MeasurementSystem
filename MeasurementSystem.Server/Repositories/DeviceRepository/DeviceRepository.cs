@@ -66,7 +66,7 @@ namespace MeasurementSystem.Server.Repositories.DeviceRepository
         public Device Insert(string device)
         {
             JsonTextReader reader = new(new StringReader(device));
-            Dictionary<string, string> keyValuePairs = new();
+            var keyValuePairs = new Dictionary<string, string>();
 
             while (reader.Read())
             {
@@ -76,23 +76,29 @@ namespace MeasurementSystem.Server.Repositories.DeviceRepository
                     reader.Read();
                     while (reader.Read() && reader.TokenType != JsonToken.EndObject)
                     {
-                        string propertyName = reader.Value.ToString();
+                        string? propertyName = (reader?.Value?.ToString()) 
+                            ?? throw new InvalidOperationException("Свойство не может быть null");
                         reader.Read();
 
                         if (reader.Value != null && reader.TokenType != JsonToken.StartObject)
                         {
-                            keyValuePairs.Add($"{nodeName}_{propertyName}", reader.Value.ToString());
+                            var value = (reader.Value.ToString()) 
+                                ?? throw new InvalidOperationException($"Значение свойства {propertyName} не может быть null");
+                            keyValuePairs.Add($"{nodeName}_{propertyName}", value);
                         }
                         else
                         {
                             while (reader.Read() && reader.TokenType != JsonToken.EndObject)
                             {
-                                string additionalProperty = reader.Value.ToString();
+                                string additionalProperty = (reader?.Value?.ToString()) 
+                                    ?? throw new InvalidOperationException("Свойство не может быть null");
                                 reader.Read();
 
                                 if (reader.Value != null && reader.TokenType != JsonToken.StartObject)
                                 {
-                                    keyValuePairs.Add($"{nodeName}_{propertyName}_{additionalProperty}", reader.Value.ToString());
+                                    var value = (reader.Value.ToString()) 
+                                        ?? throw new InvalidOperationException($"Значение свойства {propertyName} не может быть null");
+                                    keyValuePairs.Add($"{nodeName}_{propertyName}_{additionalProperty}", value);
                                 }
                             }
                         }
@@ -100,12 +106,11 @@ namespace MeasurementSystem.Server.Repositories.DeviceRepository
                 }
             }
 
-            if (!keyValuePairs.ContainsKey("system_Akey"))
+            if (!keyValuePairs.TryGetValue("system_Akey", out string? authKey))
             {
                 throw new Exception("Нет ключа аутентификации");
             }
 
-            var authKey = keyValuePairs["system_Akey"];
             keyValuePairs.Remove("system_Akey");
 
             var deviceInfo = deviceInfoRepository.Select().FirstOrDefault(d => d.AuthKey == authKey) 

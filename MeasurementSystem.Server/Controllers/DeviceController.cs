@@ -123,18 +123,22 @@ namespace MeasurementSystem.Server.Controllers
 
                 Device device = deviceRepository.Insert(data);
 
-                WriteInfoToMonitoringService(device);
+                WriteRecordToMonitoringService(device);
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                monitoring.WriteMessage(new Message()
+                {
+                    Type = "Error",
+                    Content = ex.Message
+                });
                 return BadRequest(ex.Message);
             }
 
             return Ok();
         }
 
-        private void WriteInfoToMonitoringService(Device device)
+        private void WriteRecordToMonitoringService(Device device)
         {
             var infos = deviceInfoRepository.Select();
             var deviceInfo = infos.ToDictionary(i => i.AuthKey, i => (i.Name, i.Serial));
