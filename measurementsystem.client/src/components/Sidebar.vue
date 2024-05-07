@@ -1,6 +1,7 @@
 <script setup>
     import LoginIcon from './icons/IconLogin.vue'
     import DataIcon from './icons/IconData.vue'
+    import MonitoringIcon from './icons/IconMonitoring.vue'
     import RegisteredDevicesIcon from './icons/IconRegisteredDevices.vue'
     import UsersIcon from './icons/IconUsers.vue'
     import UserIcon from './icons/IconUser.vue'
@@ -17,8 +18,8 @@
                 <DataIcon class="data-icon" />
                 <p class="router-text">Данные по приборам</p>
             </router-link>
-            <router-link v-if="!isLoggedIn" class="router-field" to="/monitoring">
-                <UsersIcon />
+            <router-link class="router-field" to="/monitoring">
+                <MonitoringIcon />
                 <p class="router-text">Мониторинг</p>
             </router-link>
             <router-link v-if="isLoggedIn" class="router-field" to="/device-registration">

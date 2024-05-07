@@ -13,7 +13,7 @@
                 <span v-else class="title">Новый пользователь</span>
                 <button v-if="!isAddingUser" class="open-user-form" @click="toggleUserForm">Добавить</button>
                 <button v-else class="back" @click="toggleUserForm">
-                    <BackIcon class="back-icon" />
+                    <BackIcon />
                 </button>
             </header>
             <main>
