@@ -122,7 +122,7 @@
     tbody {
         display: block;
         max-height: 85vh;
-        overflow: auto;
+        overflow: hidden;
     }
 
     .title-container {
