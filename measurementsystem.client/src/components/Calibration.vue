@@ -261,9 +261,9 @@
                     });
 
                     if (response.ok) {
-                        this.POSTdeviceinfo.nameSerial = '';
-                        this.POSTdeviceinfo.sensor = '';
-                        this.POSTdeviceinfo.coefficients = '';
+                        this.nameSerial = '';
+                        this.sensor = '';
+                        this.coefficients = '';
                         this.error = '';
                         this.getCalibrationItems();
                     }
