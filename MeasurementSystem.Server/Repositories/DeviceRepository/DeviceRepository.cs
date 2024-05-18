@@ -65,28 +65,6 @@ namespace MeasurementSystem.Server.Repositories.DeviceRepository
 
         public async Task<Dictionary<string, IEnumerable<string>>> SelectDeviceFieldsAsync()
         {
-            /*var query = $"from(bucket: \"{dbContext.Bucket}\") |> range(start: -7d) " +
-                $"|> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")" +
-                $"|> limit(n: 1)";
-            var tables = await dbContext.InfluxDBClient.GetQueryApi().QueryAsync(query, dbContext.Org);
-
-            var deviceInfos = deviceInfoRepository.Select();
-            var deviceInfo = deviceInfos.ToDictionary(i => i.AuthKey, i => (i.Name, i.Serial));
-            var result = new Dictionary<string, IEnumerable<string>>();
-
-            foreach (var table in tables)
-            {
-                foreach (var tr in table.Records)
-                {
-                    var authKey = tr.Values["_measurement"].ToString();
-                    var fields = tr.Values.Keys.Skip(6).Where(f => !f.Contains("system"));
-                    var key = $"{deviceInfo[authKey].Name}({deviceInfo[authKey].Serial})";
-                    result.Add(key, fields);
-                }
-            }
-
-            return result;*/
-
             var deviceInfos = deviceInfoRepository.Select();
             var result = new Dictionary<string, IEnumerable<string>>();
 
@@ -106,7 +84,10 @@ namespace MeasurementSystem.Server.Repositories.DeviceRepository
                         fields.Add(field);
                     }
                 }
-                result.Add($"{info.Name}({info.Serial})", fields);
+                if (fields.Count > 0)
+                {
+                    result.Add($"{info.Name}({info.Serial})", fields);
+                }
             }
 
             return result;
