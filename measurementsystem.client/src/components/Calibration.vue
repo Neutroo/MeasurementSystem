@@ -279,7 +279,7 @@
                 catch (error) {
                     console.log(error);
                 }
-            },
+            }
         }
     });
 </script>
@@ -366,6 +366,7 @@
         border: 2px solid #ccc;
         border-radius: 10px;
         background-color: transparent;
+        transition: .2s;
     }
 
     .custom-select option {
@@ -536,22 +537,5 @@
     .coef-field {
         width: 180px;
         word-break: break-all;
-    }
-
-    .mini-button-container {
-        padding: 8px;
-    }
-
-    .mini-button {
-        display: flex;
-        border: none;
-        background: none;
-    }
-
-    .mini-button:active svg,
-    .mini-button:hover svg {
-        fill: #29bca4;
-        transform: scale(1.05);
-        cursor: pointer;
     }
 </style>

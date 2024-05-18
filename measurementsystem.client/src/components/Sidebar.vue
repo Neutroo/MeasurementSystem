@@ -31,7 +31,7 @@
                 <UsersIcon />
                 <p class="router-text">Пользователи</p>
             </router-link>
-            <router-link class="router-field" to="/calibration">
+            <router-link v-if="isLoggedIn" class="router-field" to="/calibration">
                 <CalibrationIcon />
                 <p class="router-text">Калибровка</p>
             </router-link>
