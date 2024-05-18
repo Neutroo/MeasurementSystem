@@ -65,7 +65,7 @@ namespace MeasurementSystem.Server.Repositories.DeviceRepository
 
         public async Task<Dictionary<string, IEnumerable<string>>> SelectDeviceFieldsAsync()
         {
-            var query = $"from(bucket: \"{dbContext.Bucket}\") |> range(start: -7d) " +
+            /*var query = $"from(bucket: \"{dbContext.Bucket}\") |> range(start: -7d) " +
                 $"|> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")" +
                 $"|> limit(n: 1)";
             var tables = await dbContext.InfluxDBClient.GetQueryApi().QueryAsync(query, dbContext.Org);
@@ -83,6 +83,30 @@ namespace MeasurementSystem.Server.Repositories.DeviceRepository
                     var key = $"{deviceInfo[authKey].Name}({deviceInfo[authKey].Serial})";
                     result.Add(key, fields);
                 }
+            }
+
+            return result;*/
+
+            var deviceInfos = deviceInfoRepository.Select();
+            var result = new Dictionary<string, IEnumerable<string>>();
+
+            foreach (var info in deviceInfos)
+            {
+                var query = "import \"influxdata/influxdb/schema\"" +
+                    $"schema.measurementFieldKeys(bucket: \"{dbContext.Bucket}\", measurement: \"{info.AuthKey}\")";
+
+                var tables = await dbContext.InfluxDBClient.GetQueryApi().QueryAsync(query, dbContext.Org);
+                var fields = new List<string>();
+                foreach (var tr in tables.First().Records)
+                {
+                    var field = tr.Values["_value"].ToString();
+
+                    if (!field.Contains("system"))
+                    {
+                        fields.Add(field);
+                    }
+                }
+                result.Add(info.AuthKey, fields);
             }
 
             return result;
