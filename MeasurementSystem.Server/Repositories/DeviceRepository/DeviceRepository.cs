@@ -1,12 +1,11 @@
 ﻿using InfluxDB.Client.Api.Domain;
 using InfluxDB.Client.Core.Exceptions;
 using InfluxDB.Client.Writes;
-using MeasurementSystem.Server.Models;
 using MeasurementSystem.Server.Contexts;
+using MeasurementSystem.Server.Models;
 using MeasurementSystem.Server.Repositories.DeviceInfoRepository;
 using Newtonsoft.Json;
 using System.Text;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
 namespace MeasurementSystem.Server.Repositories.DeviceRepository
 {
@@ -66,7 +65,7 @@ namespace MeasurementSystem.Server.Repositories.DeviceRepository
 
         public async Task<Dictionary<string, IEnumerable<string>>> SelectDeviceFieldsAsync()
         {
-            var query = $"from(bucket: \"{dbContext.Bucket}\") |> range(start: -1d) " +
+            var query = $"from(bucket: \"{dbContext.Bucket}\") |> range(start: -7d) " +
                 $"|> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")" +
                 $"|> limit(n: 1)";
             var tables = await dbContext.InfluxDBClient.GetQueryApi().QueryAsync(query, dbContext.Org);
