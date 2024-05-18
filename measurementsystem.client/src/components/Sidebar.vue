@@ -4,6 +4,7 @@
     import MonitoringIcon from './icons/IconMonitoring.vue'
     import RegisteredDevicesIcon from './icons/IconRegisteredDevices.vue'
     import UsersIcon from './icons/IconUsers.vue'
+    import CalibrationIcon from './icons/IconCalibration.vue'
     import UserIcon from './icons/IconUser.vue'
 </script>
 
@@ -29,6 +30,10 @@
             <router-link v-if="isLoggedIn" class="router-field" to="/users">
                 <UsersIcon />
                 <p class="router-text">Пользователи</p>
+            </router-link>
+            <router-link class="router-field" to="/calibration">
+                <CalibrationIcon />
+                <p class="router-text">Калибровка</p>
             </router-link>
         </nav>
         <div v-if="isLoggedIn" class="user-field">

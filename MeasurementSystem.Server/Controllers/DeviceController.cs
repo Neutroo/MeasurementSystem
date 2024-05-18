@@ -1,10 +1,9 @@
-using MeasurementSystem.Server.Services;
-using MeasurementSystem.Server.Repositories.DeviceRepository;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using MeasurementSystem.Server.Models;
 using MeasurementSystem.Server.Repositories.DeviceInfoRepository;
+using MeasurementSystem.Server.Repositories.DeviceRepository;
+using MeasurementSystem.Server.Services;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace MeasurementSystem.Server.Controllers
 {

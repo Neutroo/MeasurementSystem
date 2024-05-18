@@ -7,6 +7,7 @@ namespace MeasurementSystem.Server.Contexts
     {
         public DbSet<DeviceInfo> DeviceInfos { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<CalibrationItem> CalibrationItems { get; set; }
 
         public PostgresContext()
         {

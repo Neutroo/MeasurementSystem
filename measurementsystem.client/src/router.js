@@ -5,6 +5,7 @@ import DeviceData from './components/DeviceData.vue'
 import Monitoring from './components/Monitoring.vue'
 import DeviceRegistration from './components/DeviceRegistration.vue'
 import Users from './components/Users.vue'
+import Calibration from './components/Calibration.vue'
 
 const routes = [
     {
@@ -26,6 +27,10 @@ const routes = [
     {
         path: '/users',
         component: Users
+    },
+    {
+        path: '/calibration',
+        component: Calibration
     }
 ]
 

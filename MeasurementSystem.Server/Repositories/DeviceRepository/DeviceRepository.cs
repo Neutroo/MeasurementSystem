@@ -6,6 +6,7 @@ using MeasurementSystem.Server.Contexts;
 using MeasurementSystem.Server.Repositories.DeviceInfoRepository;
 using Newtonsoft.Json;
 using System.Text;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
 namespace MeasurementSystem.Server.Repositories.DeviceRepository
 {
@@ -61,6 +62,31 @@ namespace MeasurementSystem.Server.Repositories.DeviceRepository
             var records = await SelectAsync(from, to);
             var fileContents = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(records));
             return fileContents;
+        }
+
+        public async Task<Dictionary<string, IEnumerable<string>>> SelectDeviceFieldsAsync()
+        {
+            var query = $"from(bucket: \"{dbContext.Bucket}\") |> range(start: -1d) " +
+                $"|> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")" +
+                $"|> limit(n: 1)";
+            var tables = await dbContext.InfluxDBClient.GetQueryApi().QueryAsync(query, dbContext.Org);
+
+            var deviceInfos = deviceInfoRepository.Select();
+            var deviceInfo = deviceInfos.ToDictionary(i => i.AuthKey, i => (i.Name, i.Serial));
+            var result = new Dictionary<string, IEnumerable<string>>();
+
+            foreach (var table in tables)
+            {
+                foreach (var tr in table.Records)
+                {
+                    var authKey = tr.Values["_measurement"].ToString();
+                    var fields = tr.Values.Keys.Skip(6).Where(f => !f.Contains("system"));
+                    var key = $"{deviceInfo[authKey].Name}({deviceInfo[authKey].Serial})";
+                    result.Add(key, fields);
+                }
+            }
+
+            return result;
         }
 
         public Device Insert(string device)

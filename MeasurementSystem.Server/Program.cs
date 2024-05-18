@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using MeasurementSystem.Server.Repositories.CalibrationItemRepository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,7 @@ builder.Services.AddDbContext<PostgresContext>();
 builder.Services.AddScoped<IDeviceInfoRepository, DeviceInfoRepository>();
 builder.Services.AddScoped<IDeviceRepository, DeviceRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ICalibrationItemRepository, CalibrationItemRepository>();
 builder.Services.AddSingleton<MonitoringService>();
 
 builder.Services.AddSwaggerGen(option =>
