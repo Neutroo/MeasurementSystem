@@ -106,7 +106,7 @@ namespace MeasurementSystem.Server.Repositories.DeviceRepository
                         fields.Add(field);
                     }
                 }
-                result.Add(info.AuthKey, fields);
+                result.Add($"{info.Name}({info.Serial})", fields);
             }
 
             return result;
