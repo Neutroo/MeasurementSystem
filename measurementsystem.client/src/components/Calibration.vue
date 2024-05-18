@@ -96,7 +96,7 @@
                     <form v-if="selectedDegree" class="polynomial-form" @submit.prevent="addCalibrationItem">
                         <div class="polynomial-container">
                             <div class="number-field" v-for="n in selectedDegree + 1" :key="n">
-                                <input class="number-input" type="number" v-model.number="coefficients[n-1]" :placeholder="`a${n - 1}`" required>
+                                <input class="number-input" type="number" step="0.0001" v-model.number="coefficients[n-1]" :placeholder="`a${n - 1}`" required>
                             </div>
                         </div>
                         <div class="button-container">
