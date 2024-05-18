@@ -263,7 +263,7 @@
                     if (response.ok) {
                         this.nameSerial = '';
                         this.sensor = '';
-                        this.coefficients = '';
+                        this.coefficients = new Array(this.selectedDegree + 1);
                         this.error = '';
                         this.getCalibrationItems();
                     }
