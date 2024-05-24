@@ -26,27 +26,45 @@ namespace MeasurementSystem.Server.Controllers
             this.deviceInfoRepository = deviceInfoRepository;
         }
 
-        [HttpGet("Fields")]
-        public async Task<ActionResult<Dictionary<string, IEnumerable<string>>>> GetFields()
+        [HttpGet]
+        public ActionResult<Dictionary<string, Dictionary<string, IEnumerable<object>>>> Get()
         {
-            var deviceFields = await deviceRepository.SelectDeviceFieldsAsync();
-            return Ok(deviceFields);
+            var items = calibrationItemRepository.Select();
+            var deviceInfos = deviceInfoRepository.Select();
+            var deviceInfo = deviceInfos.ToDictionary(i => i.AuthKey, i => (i.Name, i.Serial));
+
+            var result = items.GroupBy(i => i.AuthKey)
+                .ToDictionary(
+                    g => $"{deviceInfo[g.Key].Name}({deviceInfo[g.Key].Serial})",
+                    g => g.GroupBy(r => r.Sensor)
+                        .ToDictionary(
+                            sg => sg.Key,
+                            sg => sg.Select(x => new
+                            {
+                                CreationDate = x.CreationDate.ToString("yyyy-MM-dd HH:mm:ss"),
+                                x.Coefficients
+                            }).OrderByDescending(x => x.CreationDate).AsEnumerable<object>()
+                        )
+                );
+
+            return Ok(result);
         }
 
-        [HttpGet]
-        public ActionResult<Dictionary<string, IEnumerable<GETCalibrationItemDto>>> Get()
+        [HttpGet("LastItems")]
+        public ActionResult<Dictionary<string, IEnumerable<GETCalibrationItemDto>>> GetLast()
         {
             var items = calibrationItemRepository.Select();
             var deviceInfos = deviceInfoRepository.Select();
             var deviceInfo = deviceInfos.ToDictionary(i => i.AuthKey, i => (i.Name, i.Serial));
             var grouped = items.GroupBy(i => i.AuthKey);
-
             var result = new Dictionary<string, IEnumerable<GETCalibrationItemDto>>();
 
             foreach (var group in grouped)
             {
                 var records = new List<GETCalibrationItemDto>();
-                foreach (var item in group)
+                var latestRecords = group.GroupBy(i => i.Sensor).Select(s => s.OrderByDescending(i => i.CreationDate).First());
+
+                foreach (var item in latestRecords)
                 {
                     records.Add(new GETCalibrationItemDto()
                     {
@@ -59,6 +77,20 @@ namespace MeasurementSystem.Server.Controllers
             }
 
             return Ok(result);
+        }
+
+        [HttpGet("SensorsByDevice")]
+        public async Task<ActionResult<Dictionary<string, IEnumerable<string>>>> GetSensorsByDevice()
+        {
+            var sensorsByDevice = await deviceRepository.SelectSensorsByDeviceAsync();
+            return Ok(sensorsByDevice);
+        }
+
+        [HttpGet("DevicesBySensor")]
+        public async Task<ActionResult<Dictionary<string, IEnumerable<string>>>> GetDevicesBySensor()
+        {
+            var devicesBySensors = await deviceRepository.SelectDevicesBySensorAsync();
+            return Ok(devicesBySensors);
         }
 
         [HttpPost]

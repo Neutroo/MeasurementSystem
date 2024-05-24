@@ -6,7 +6,8 @@ namespace MeasurementSystem.Server.Repositories.DeviceRepository
     {
         Task<Dictionary<string, Record>> SelectAsync(DateTime from, DateTime to);
         Task<byte[]> SelectAsBytesAsync(DateTime from, DateTime to);
-        Task<Dictionary<string, IEnumerable<string>>> SelectDeviceFieldsAsync();
+        Task<Dictionary<string, List<string>>> SelectSensorsByDeviceAsync();
+        Task<Dictionary<string, List<string>>> SelectDevicesBySensorAsync();
         Device Insert(string device);
     }
 }

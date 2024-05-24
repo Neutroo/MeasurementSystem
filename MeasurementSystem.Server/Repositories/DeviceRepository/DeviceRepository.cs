@@ -63,10 +63,10 @@ namespace MeasurementSystem.Server.Repositories.DeviceRepository
             return fileContents;
         }
 
-        public async Task<Dictionary<string, IEnumerable<string>>> SelectDeviceFieldsAsync()
+        public async Task<Dictionary<string, List<string>>> SelectSensorsByDeviceAsync()
         {
             var deviceInfos = deviceInfoRepository.Select();
-            var result = new Dictionary<string, IEnumerable<string>>();
+            var result = new Dictionary<string, List<string>>();
 
             foreach (var info in deviceInfos)
             {
@@ -87,6 +87,28 @@ namespace MeasurementSystem.Server.Repositories.DeviceRepository
                 if (fields.Count > 0)
                 {
                     result.Add($"{info.Name}({info.Serial})", fields);
+                }
+            }
+
+            return result;
+        }
+
+        public async Task<Dictionary<string, List<string>>> SelectDevicesBySensorAsync()
+        {
+            var sensorsByDevice = await SelectSensorsByDeviceAsync();
+
+            var result = new Dictionary<string, List<string>>();
+
+            foreach (var key in sensorsByDevice.Keys)
+            {
+                foreach (var item in sensorsByDevice[key])
+                {
+                    if (!result.TryGetValue(item, out List<string>? value))
+                    {
+                        value = ([]);
+                        result[item] = value;
+                    }
+                    value.Add(key);
                 }
             }
 

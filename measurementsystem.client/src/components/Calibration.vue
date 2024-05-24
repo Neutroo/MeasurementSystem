@@ -1,8 +1,8 @@
 <script setup>
-    import CrossIcon from './icons/IconCross.vue'
     import BackIcon from './icons/IconBack.vue'
-    import EditIcon from './icons/IconEdit.vue'
+    import HistoryIcon from './icons/IconHistory.vue'
     import Error from './Error.vue'
+    import CustomSelect from './CustomSelect.vue'
 </script>
 
 <template>
@@ -12,7 +12,7 @@
                 <div v-if="!isCalibrateByDevice && !isCalibrateBySensor">
                     <div v-if="!isAddingForm" class="title-container">
                         <span class="title">Калибровочные данные</span>
-                        <button class="open-adding-form" @click="toggleAddingForm">Добавить</button>
+                        <button class="open-adding-form" @click="toggleAddingForm">Добавить</button>                       
                     </div>
                     <div v-else class="title-container">
                         <span class="title">Добавление</span>
@@ -36,14 +36,12 @@
             </header>
             <main>
                 <div v-if="!isCalibrateByDevice && !isCalibrateBySensor">
-                    <div v-if="!isAddingForm && calibrationItems" class="table-container">
+                    <div v-if="!isAddingForm && lastItems" class="table-container">
                         <div class="select-container">
                             <span class="select-label">Выберите прибор</span>
-                            <select v-model="tableSelectedDevice" class="custom-select">
-                                <option selected v-for="(sensors, device) in calibrationItems" :value="device">
-                                    {{ device }}
-                                </option>
-                            </select>
+                            <div>
+                                <CustomSelect v-model="tableSelectedDevice" :options="Object.keys(lastItems)" />
+                            </div>
                         </div>
                         <table>
                             <thead>
@@ -51,14 +49,30 @@
                                     <th class="sensor-field">Датчик</th>
                                     <th class="date-field">Время добавления</th>
                                     <th class="coef-field">Коэффициенты </th>
+                                    <th style="width: 36px"></th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="item in calibrationItems[tableSelectedDevice]" :key="item">
+                                <tr v-for="(item, index) in lastItems[tableSelectedDevice]" :key="index">
                                     <td class="sensor-field">{{ item.sensor }}</td>
                                     <td class="date-field">{{ item.creationDate }}</td>
                                     <td class="coef-field">{{ item.coefficients }}</td>
+                                    <td class="mini-button-container" @mouseover="showTooltip(index)" @mouseleave="hideTooltip">
+                                        <button class="mini-button">
+                                            <HistoryIcon />
+                                        </button>
+                                        <div v-if="currentHoveredIndex === index && isTooltipActive" class="tooltip">
+                                            <table>
+                                                <tbody class="tooltip-body">
+                                                    <tr v-for="record in calibrationItems[tableSelectedDevice][item.sensor]" :key="record">
+                                                        <td class="date-field">{{ record.creationDate }}</td>
+                                                        <td class="coef-field">{{ record.coefficients }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -72,21 +86,17 @@
                     <div class="calibrate-container">
                         <div class="select-container">
                             <span class="select-label">Выберите прибор</span>
-                            <select v-model="selectedDevice" class="custom-select">
-                                <option selected v-for="(sensors, device) in deviceSensors" :value="device">
-                                    {{ device }}
-                                </option>
-                            </select>
+                            <div>
+                                <CustomSelect v-model="selectedDevice" :options="Object.keys(sensorsByDevice)" />
+                            </div>
                         </div>
                         <div v-if="selectedDevice" class="select-container">
                             <span class="select-label">Выберите датчик</span>
-                            <select v-model="selectedSensor" class="custom-select">
-                                <option selected v-for="sensor in deviceSensors[selectedDevice]" :value="sensor">
-                                    {{ sensor }}
-                                </option>
-                            </select>
+                            <div>
+                                <CustomSelect v-model="selectedSensor" :options="sensorsByDevice[selectedDevice]" />
+                            </div>
                         </div>
-                        <div v-if="selectedSensor" class="select-container">
+                        <div v-if="selectedDevice && selectedSensor" class="select-container">
                             <span class="select-label">Укажите степень полинома</span>
                             <select v-model="selectedDegree" class="custom-select">
                                 <option v-for="n in 6" :value="n">{{ n }}</option>
@@ -105,19 +115,39 @@
                     </form>
                 </div>
                 <div v-if="isCalibrateBySensor" class="menu">
-                    
+                    <div class="calibrate-container">
+                        <div class="select-container">
+                            <span class="select-label">Выберите датчик</span>
+                            <div>
+                                <CustomSelect v-model="selectedSensor" :options="Object.keys(devicesBySensor)" />
+                            </div>
+                        </div>
+                        <div v-if="selectedSensor" class="select-container">
+                            <span class="select-label">Выберите прибор</span>
+                            <div>
+                                <CustomSelect v-model="selectedDevice" :options="devicesBySensor[selectedSensor]" />
+                            </div>
+                        </div>
+                        <div v-if="selectedSensor && selectedDevice" class="select-container">
+                            <span class="select-label">Укажите степень полинома</span>
+                            <select v-model="selectedDegree" class="custom-select">
+                                <option v-for="n in 6" :value="n">{{ n }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <form v-if="selectedDegree" class="polynomial-form" @submit.prevent="addCalibrationItem">
+                        <div class="polynomial-container">
+                            <div class="number-field" v-for="n in selectedDegree + 1" :key="n">
+                                <input class="number-input" type="number" step="0.0001" v-model.number="coefficients[n-1]" :placeholder="`a${n - 1}`" required>
+                            </div>
+                        </div>
+                        <div class="button-container">
+                            <button type="submit" class="flat-button" @click="download">Добавить</button>
+                        </div>
+                    </form>
                 </div>
                 <Error :message="error" />
             </main>
-        </div>
-        <div v-if="isPopupVisible" class="popup">
-            <div class="popup-content">
-                <p class="popup-text">Вы действительно хотите удалить прибор {{ infoNameSerialForDelete }}?</p>
-                <div class="popup-buttons">
-                    <button class="flat-button" @click="deleteDeviceInfo(infoIdForDelete)">Да</button>
-                    <button class="flat-button" @click="isPopupVisible = false">Отмена</button>
-                </div>
-            </div>
         </div>
     </div>
 </template>
@@ -140,13 +170,71 @@
                 isCalibrateByDevice: false,
                 isCalibrateBySensor: false,
                 isAddingForm: false,
-                deviceSensors: null,
+                sensorsByDevice: null,
+                devicesBySensor: null,
                 selectedDevice: null,
                 selectedSensor: null,
                 selectedDegree: null,
                 tableSelectedDevice: null,
+                lastItems: {
+                    "Hydra-L(01)": [
+                        {
+                            "sensor": "BME280_temp",
+                            "creationDate": "2024-05-17 12:14:46",
+                            "coefficients": [
+                                1,
+                                2.34
+                            ]
+                        },
+                        {
+                            "sensor": "BME280_humidity",
+                            "creationDate": "2024-05-24 11:38:14",
+                            "coefficients": [
+                                1,
+                                2,
+                                3,
+                                2,
+                                4,
+                                3.3
+                            ]
+                        }
+                    ],
+                    "РОСА К-2(01)": [
+                        {
+                            "sensor": "light_lux",
+                            "creationDate": "2024-05-22 16:59:19",
+                            "coefficients": [
+                                1,
+                                2,
+                                3
+                            ]
+                        },
+                        {
+                            "sensor": "color_greenC",
+                            "creationDate": "2024-05-22 21:23:35",
+                            "coefficients": [
+                                1,
+                                23
+                            ]
+                        }
+                    ],
+                    "Сервер СЕВ(01)": [
+                        {
+                            "sensor": "NTP_Delay",
+                            "creationDate": "2024-05-22 21:21:58",
+                            "coefficients": [
+                                1,
+                                2,
+                                3,
+                                4
+                            ]
+                        }
+                    ]
+                },
                 coefficients: [],
                 calibrationItems: null,
+                currentHoveredIndex: null,
+                isTooltipActive: false,
                 error: ''
             }
         },
@@ -155,8 +243,16 @@
         },
         watch: {
             selectedDevice() {
-                this.selectedSensor = null;
-                this.selectedDegree = null;
+                if (this.isCalibrateByDevice) {
+                    this.selectedSensor = null;
+                    this.selectedDegree = null;
+                }
+            },
+            selectedSensor() {
+                if (this.isCalibrateBySensor) {
+                    this.selectedDevice = null;
+                    this.selectedDegree = null;
+                }
             },
             selectedDegree() {
                 this.coefficients = new Array(this.selectedDegree + 1);
@@ -166,7 +262,9 @@
         },
         created() {
             this.getCalibrationItems();
-            this.getDeviceSensors();
+            this.getLastCalibrationItems();
+            this.getSensorsByDevice();
+            this.getDevicesBySensor();
         },
         beforeMount() {
         },
@@ -195,16 +293,40 @@
                 this.isCalibrateBySensor = !this.isCalibrateBySensor;
                 this.error = '';
             },
-            async getDeviceSensors() {
+            async getSensorsByDevice() {
                 try {
-                    const response = await fetch('api/calibration/fields', {
+                    const response = await fetch('api/calibration/sensorsbydevice', {
                         headers: {
                             'Authorization': 'Bearer ' + this.getToken
                         }
                     });
 
                     if (response.ok) {
-                        this.deviceSensors = await response.json();
+                        this.sensorsByDevice = await response.json();
+                    }
+                    else {
+                        if (response.status === 500) {
+                            this.error = 'Status: 500. Internal Server Error.';
+                        }
+                        else {
+                            this.error = await response.text();
+                        }
+                    }
+                }
+                catch (error) {
+                    console.log(error);
+                }
+            },
+            async getDevicesBySensor() {
+                try {
+                    const response = await fetch('api/calibration/devicesbysensor', {
+                        headers: {
+                            'Authorization': 'Bearer ' + this.getToken
+                        }
+                    });
+
+                    if (response.ok) {
+                        this.devicesBySensor = await response.json();
                     }
                     else {
                         if (response.status === 500) {
@@ -243,6 +365,30 @@
                     console.log(error);
                 }
             },
+            async getLastCalibrationItems() {
+                try {
+                    const response = await fetch('api/calibration/lastitems', {
+                        headers: {
+                            'Authorization': 'Bearer ' + this.getToken
+                        }
+                    });
+
+                    if (response.ok) {
+                        this.lastItems = await response.json();
+                    }
+                    else {
+                        if (response.status === 500) {
+                            this.error = 'Status: 500. Internal Server Error.';
+                        }
+                        else {
+                            this.error = await response.text();
+                        }
+                    }
+                }
+                catch (error) {
+                    console.log(error);
+                }
+            },
             async addCalibrationItem() {
                 this.error = '';
 
@@ -266,6 +412,7 @@
                         this.coefficients = new Array(this.selectedDegree + 1);
                         this.error = '';
                         this.getCalibrationItems();
+                        this.getLastCalibrationItems();
                     }
                     else {
                         if (response.status === 500) {
@@ -279,6 +426,14 @@
                 catch (error) {
                     console.log(error);
                 }
+            },
+            showTooltip(index) {
+                this.currentHoveredIndex = index;
+                this.isTooltipActive = true;
+            },
+            hideTooltip() {
+                this.isTooltipActive = false;
+                this.currentHoveredIndex = null;
             }
         }
     });
@@ -537,5 +692,34 @@
     .coef-field {
         width: 180px;
         word-break: break-all;
+    }
+
+    .mini-button-container {
+        padding: 5px;
+    }
+
+    .mini-button {
+        display: flex;
+        border: none;
+        background: none;
+    }
+
+    .mini-button:active svg,
+    .mini-button:hover svg {
+        fill: #29bca4;
+        transform: scale(1.05);
+        cursor: pointer;
+    }
+
+    .tooltip-body {
+        max-height: 200px;
+    }
+
+    .tooltip {
+        position: absolute;
+        background-color: #f9f9f9;
+        border: 1px solid #ccc;
+        padding: 5px;
+        border-radius: 5px;
     }
 </style>
