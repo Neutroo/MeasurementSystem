@@ -176,61 +176,7 @@
                 selectedSensor: null,
                 selectedDegree: null,
                 tableSelectedDevice: null,
-                lastItems: {
-                    "Hydra-L(01)": [
-                        {
-                            "sensor": "BME280_temp",
-                            "creationDate": "2024-05-17 12:14:46",
-                            "coefficients": [
-                                1,
-                                2.34
-                            ]
-                        },
-                        {
-                            "sensor": "BME280_humidity",
-                            "creationDate": "2024-05-24 11:38:14",
-                            "coefficients": [
-                                1,
-                                2,
-                                3,
-                                2,
-                                4,
-                                3.3
-                            ]
-                        }
-                    ],
-                    "РОСА К-2(01)": [
-                        {
-                            "sensor": "light_lux",
-                            "creationDate": "2024-05-22 16:59:19",
-                            "coefficients": [
-                                1,
-                                2,
-                                3
-                            ]
-                        },
-                        {
-                            "sensor": "color_greenC",
-                            "creationDate": "2024-05-22 21:23:35",
-                            "coefficients": [
-                                1,
-                                23
-                            ]
-                        }
-                    ],
-                    "Сервер СЕВ(01)": [
-                        {
-                            "sensor": "NTP_Delay",
-                            "creationDate": "2024-05-22 21:21:58",
-                            "coefficients": [
-                                1,
-                                2,
-                                3,
-                                4
-                            ]
-                        }
-                    ]
-                },
+                lastItems: null,
                 coefficients: [],
                 calibrationItems: null,
                 currentHoveredIndex: null,
