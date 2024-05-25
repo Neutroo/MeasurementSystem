@@ -4,7 +4,7 @@ namespace MeasurementSystem.Server.Models
 {
     public class Record
     {
-        [JsonProperty("date")]
+        [JsonProperty("Date")]
         public string Date { get; set; }
 
         [JsonProperty("uName")]
