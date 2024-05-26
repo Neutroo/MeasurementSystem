@@ -1,5 +1,6 @@
 ﻿using InfluxDB.Client.Core.Exceptions;
 using MeasurementSystem.Server.Dto;
+using MeasurementSystem.Server.Models;
 using MeasurementSystem.Server.Repositories.CalibrationItemRepository;
 using MeasurementSystem.Server.Repositories.DeviceInfoRepository;
 using MeasurementSystem.Server.Repositories.DeviceRepository;
@@ -10,7 +11,7 @@ using Newtonsoft.Json;
 namespace MeasurementSystem.Server.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController, Authorize]
+    [ApiController]
     public class CalibrationController : ControllerBase
     {
         private readonly ICalibrationItemRepository calibrationItemRepository;
@@ -26,7 +27,7 @@ namespace MeasurementSystem.Server.Controllers
             this.deviceInfoRepository = deviceInfoRepository;
         }
 
-        [HttpGet]
+        [HttpGet, Authorize]
         public ActionResult<Dictionary<string, Dictionary<string, IEnumerable<object>>>> Get()
         {
             var items = calibrationItemRepository.Select();
@@ -50,7 +51,7 @@ namespace MeasurementSystem.Server.Controllers
             return Ok(result);
         }
 
-        [HttpGet("LastItems")]
+        [HttpGet("LastItems"), Authorize]
         public ActionResult<Dictionary<string, IEnumerable<GETCalibrationItemDto>>> GetLast()
         {
             var items = calibrationItemRepository.Select();
@@ -79,21 +80,88 @@ namespace MeasurementSystem.Server.Controllers
             return Ok(result);
         }
 
-        [HttpGet("SensorsByDevice")]
+        [HttpGet("Table")]
+        public ActionResult<IEnumerable<CalibrationTableItem>> GetCalibrationTable()
+        {
+            var items = calibrationItemRepository.Select();
+            var deviceInfos = deviceInfoRepository.Select();
+            var deviceInfo = deviceInfos.ToDictionary(i => i.AuthKey, i => (i.Name, i.Serial));
+
+            /*var dict = items.GroupBy(i => i.AuthKey)
+                .ToDictionary(
+                    g => (deviceInfo[g.Key].Name, deviceInfo[g.Key].Serial),
+                    g => g.GroupBy(r => r.Sensor)
+                        .ToDictionary(
+                            sg => sg.Key,
+                            sg => sg.Select(x => new
+                            {
+                                CreationDate = x.CreationDate.ToString("yyyy-MM-dd HH:mm:ss"),
+                                x.Coefficients
+                            }).OrderByDescending(x => x.CreationDate).AsEnumerable<object>()
+                        )
+                );
+
+            var result = new List<CalibrationTableItem>();
+
+            foreach (var item in dict)
+            {
+                result.Add(new CalibrationTableItem()
+                {
+                    DeviceName = item.Key.Name,
+                    DeviceSerial = item.Key.Serial,
+                    Sensors = item.Value.Select(i => new Sensor()
+                    {
+                        Name = i.Key,
+                        Calibrations = i.Value.Select(c => new Calibration()
+                        {
+                            CreationDate = c["CreationDate"],
+                            Data = c["Coefficients"]
+                        })
+                    })
+
+                });
+            }*/
+
+            var result = items.GroupBy(i => i.AuthKey)
+                .Select(g => new CalibrationTableItem
+                {
+                    DeviceName = deviceInfo[g.Key].Name,
+                    DeviceSerial = deviceInfo[g.Key].Serial,
+                    Sensors = g.GroupBy(r => r.Sensor)
+                        .Select(sg => new Sensor
+                        {
+                            Name = sg.Key,
+                            Calibrations = sg.OrderByDescending(x => x.CreationDate)
+                                .Select(x => new Calibration
+                                {
+                                    CreationDate = x.CreationDate.ToString("yyyy-MM-dd HH:mm:ss"),
+                                    Data = new
+                                    {
+                                        n = x.Coefficients.Length - 1,
+                                        ai = x.Coefficients
+                                    }
+                                })
+                        })
+                });
+
+            return Ok(JsonConvert.SerializeObject(result));
+        }
+
+        [HttpGet("SensorsByDevice"), Authorize]
         public async Task<ActionResult<Dictionary<string, IEnumerable<string>>>> GetSensorsByDevice()
         {
             var sensorsByDevice = await deviceRepository.SelectSensorsByDeviceAsync();
             return Ok(sensorsByDevice);
         }
 
-        [HttpGet("DevicesBySensor")]
+        [HttpGet("DevicesBySensor"), Authorize]
         public async Task<ActionResult<Dictionary<string, IEnumerable<string>>>> GetDevicesBySensor()
         {
             var devicesBySensors = await deviceRepository.SelectDevicesBySensorAsync();
             return Ok(devicesBySensors);
         }
 
-        [HttpPost]
+        [HttpPost, Authorize]
         public IActionResult Post(POSTCalibrationItemDto calibrationItemDto)
         {
             if (!ModelState.IsValid)
