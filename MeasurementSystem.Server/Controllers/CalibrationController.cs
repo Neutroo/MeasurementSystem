@@ -87,41 +87,6 @@ namespace MeasurementSystem.Server.Controllers
             var deviceInfos = deviceInfoRepository.Select();
             var deviceInfo = deviceInfos.ToDictionary(i => i.AuthKey, i => (i.Name, i.Serial));
 
-            /*var dict = items.GroupBy(i => i.AuthKey)
-                .ToDictionary(
-                    g => (deviceInfo[g.Key].Name, deviceInfo[g.Key].Serial),
-                    g => g.GroupBy(r => r.Sensor)
-                        .ToDictionary(
-                            sg => sg.Key,
-                            sg => sg.Select(x => new
-                            {
-                                CreationDate = x.CreationDate.ToString("yyyy-MM-dd HH:mm:ss"),
-                                x.Coefficients
-                            }).OrderByDescending(x => x.CreationDate).AsEnumerable<object>()
-                        )
-                );
-
-            var result = new List<CalibrationTableItem>();
-
-            foreach (var item in dict)
-            {
-                result.Add(new CalibrationTableItem()
-                {
-                    DeviceName = item.Key.Name,
-                    DeviceSerial = item.Key.Serial,
-                    Sensors = item.Value.Select(i => new Sensor()
-                    {
-                        Name = i.Key,
-                        Calibrations = i.Value.Select(c => new Calibration()
-                        {
-                            CreationDate = c["CreationDate"],
-                            Data = c["Coefficients"]
-                        })
-                    })
-
-                });
-            }*/
-
             var result = items.GroupBy(i => i.AuthKey)
                 .Select(g => new CalibrationTableItem
                 {

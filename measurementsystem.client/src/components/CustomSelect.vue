@@ -135,7 +135,7 @@
         list-style: none;
         text-align: left;
         padding-left: 8px;
-        max-height: 300px;
+        max-height: 28vh;
         overflow-y: scroll;
         overflow-x: hidden;
     }
