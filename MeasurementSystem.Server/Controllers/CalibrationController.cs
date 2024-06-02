@@ -142,8 +142,6 @@ namespace MeasurementSystem.Server.Controllers
 
                 var calibrationItem = calibrationItemDto.ToDomain(authKey);
 
-                Console.WriteLine(JsonConvert.SerializeObject(calibrationItem));
-
                 calibrationItemRepository.Insert(calibrationItem);
                 calibrationItemRepository.Save();
             }

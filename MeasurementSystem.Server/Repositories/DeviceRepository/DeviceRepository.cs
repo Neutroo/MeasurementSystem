@@ -41,6 +41,14 @@ namespace MeasurementSystem.Server.Repositories.DeviceRepository
                     var localTime = DateTime.Parse(utcTime.ToString()).AddHours(3).ToString("yyyy-MM-dd HH:mm:ss");
                     var fields = tr.Values.Skip(6).ToDictionary(r => r.Key, r => r.Value);
 
+                    if (authKey == "Shum01")
+                    {
+                        foreach (var field in fields)
+                        {
+                            await Console.Out.WriteLineAsync(field.Key + ' ' + field.Value);
+                        }
+                    }
+
                     var record = new Record()
                     {
                         Date = localTime,
