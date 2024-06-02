@@ -21,9 +21,6 @@ namespace MeasurementSystem.Server.Controllers
         public ActionResult<IEnumerable<Message>> Get()
         {
             var messages = monitoring.GetMessages();
-
-            Console.WriteLine(JsonConvert.SerializeObject(messages));
-
             return messages.IsNullOrEmpty() ? NoContent() : Ok(messages);
         }
     }

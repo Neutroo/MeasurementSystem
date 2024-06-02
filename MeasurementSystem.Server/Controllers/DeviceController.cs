@@ -108,7 +108,7 @@ namespace MeasurementSystem.Server.Controllers
                 {
                     return BadRequest("Пустой json");
                 }
-
+                await Console.Out.WriteLineAsync(data);
                 Device device = deviceRepository.Insert(data);
 
                 WriteRecordToMonitoringService(device);
