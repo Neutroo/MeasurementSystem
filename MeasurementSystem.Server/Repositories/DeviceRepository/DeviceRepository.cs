@@ -166,7 +166,7 @@ namespace MeasurementSystem.Server.Repositories.DeviceRepository
             keyValuePairs.Remove("system_Akey");
 
             var deviceInfo = deviceInfoRepository.Select().FirstOrDefault(d => d.AuthKey == authKey) 
-                ?? throw new NotFoundException($"Невалидный ключ аутентификации устройства: {authKey}");
+                ?? throw new NotFoundException($"Не валидный ключ аутентификации устройства: {authKey}");
 
             var point = PointData.Measurement(authKey);
 
